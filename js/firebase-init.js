@@ -13,37 +13,62 @@ const firebaseConfig = {
   measurementId: "G-C3BG49V9JG"
 };
 
-// Initialize Firebase
-const firebaseApp = firebase.initializeApp(firebaseConfig);
+// Global variables for Firebase and Analytics
+let firebaseApp;
+let analytics;
 
-// Check if we're in a production environment
-const isProduction = window.location.hostname === 'jotransportation.com' || 
-                     window.location.hostname === 'www.jotransportation.com';
+// Initialize Firebase when the document is fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+  // Check if Firebase is loaded
+  if (typeof firebase !== 'undefined') {
+    try {
+      // Initialize Firebase
+      firebaseApp = firebase.initializeApp(firebaseConfig);
 
-// Initialize App Check in production
-if (isProduction && typeof firebase.appCheck !== 'undefined') {
-  // Use reCAPTCHA v3 for App Check
-  const appCheck = firebase.appCheck();
-  // Replace 'YOUR_RECAPTCHA_SITE_KEY' with your actual reCAPTCHA site key
-  // You need to register for reCAPTCHA v3 in Google Cloud Console
-  // and add the site key to your Firebase project
-  appCheck.activate('6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', true);
-}
+      // Check if we're in a production environment
+      const isProduction = window.location.hostname === 'jotransportation.com' || 
+                          window.location.hostname === 'www.jotransportation.com';
 
-// Initialize Analytics
-const analytics = firebase.analytics();
+      // Initialize App Check in production
+      if (isProduction && typeof firebase.appCheck !== 'undefined') {
+        // Use reCAPTCHA v3 for App Check
+        const appCheck = firebase.appCheck();
+        // Replace 'YOUR_RECAPTCHA_SITE_KEY' with your actual reCAPTCHA site key
+        // You need to register for reCAPTCHA v3 in Google Cloud Console
+        // and add the site key to your Firebase project
+        appCheck.activate('6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', true);
+      }
 
-// Track page views automatically
-analytics.logEvent('page_view', {
-  page_title: document.title,
-  page_location: window.location.href,
-  page_path: window.location.pathname
+      // Initialize Analytics
+      if (typeof firebase.analytics === 'function') {
+        analytics = firebase.analytics();
+
+        // Track page views automatically
+        analytics.logEvent('page_view', {
+          page_title: document.title,
+          page_location: window.location.href,
+          page_path: window.location.pathname
+        });
+      } else {
+        console.warn('Firebase Analytics not available');
+      }
+    } catch (error) {
+      console.error('Error initializing Firebase:', error);
+    }
+  } else {
+    console.warn('Firebase SDK not loaded');
+  }
 });
 
-// Function to track custom events - removed console logging for security
+// Function to track custom events - with proper error handling
 function trackEvent(eventName, eventParams = {}) {
+  // Only track events if analytics is defined and initialized
   if (typeof analytics !== 'undefined' && analytics) {
-    analytics.logEvent(eventName, eventParams);
+    try {
+      analytics.logEvent(eventName, eventParams);
+    } catch (error) {
+      console.warn('Error tracking event:', error);
+    }
   }
 }
 
