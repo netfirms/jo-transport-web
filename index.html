@@ -10,7 +10,7 @@
     <link rel="canonical" href="https://jotransportation.com/">
 
     <!-- Security Headers -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.gstatic.com https://cdn.tailwindcss.com 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; connect-src 'self' https://api.emailjs.com https://*.firebaseio.com https://*.googleapis.com; frame-src 'none'; object-src 'none'; base-uri 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.gstatic.com https://cdn.tailwindcss.com https://www.googletagmanager.com 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; connect-src 'self' https://api.emailjs.com https://*.firebaseio.com https://*.googleapis.com; frame-src 'none'; object-src 'none'; base-uri 'self';">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
@@ -296,14 +296,16 @@
 
             <!-- Second video (loaded on demand) -->
             <div id="hero-video-2-container" class="absolute inset-0 w-full h-full hidden">
-                <video id="hero-video-2" class="absolute inset-0 w-full h-full object-cover" muted playsinline preload="none" data-src="images/Airport_Transportation_Video_Plan.mp4" poster="info/Screenshot 2568-07-04 at 23.59.10.png">
+                <video id="hero-video-2" class="absolute inset-0 w-full h-full object-cover" muted playsinline preload="metadata" poster="info/Screenshot 2568-07-04 at 23.59.10.png">
+                    <source src="images/Airport_Transportation_Video_Plan.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
             </div>
 
             <!-- Third video (loaded on demand) -->
             <div id="hero-video-3-container" class="absolute inset-0 w-full h-full hidden">
-                <video id="hero-video-3" class="absolute inset-0 w-full h-full object-cover" muted playsinline preload="none" data-src="images/Video_Prompt_for_Airport_Services.mp4" poster="info/Screenshot 2568-07-04 at 23.59.21.png">
+                <video id="hero-video-3" class="absolute inset-0 w-full h-full object-cover" muted playsinline preload="metadata" poster="info/Screenshot 2568-07-04 at 23.59.21.png">
+                    <source src="images/Video_Prompt_for_Airport_Services.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
             </div>
@@ -343,8 +345,8 @@
             <h2 data-i18n="services.title" class="section-title text-center mb-12 text-3xl md:text-4xl text-dark relative pb-4 font-secondary font-bold">Our Services</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="bg-white rounded shadow-custom transition-all duration-300 hover:-translate-y-2 hover:shadow-custom-hover overflow-hidden flex flex-col h-full">
-                    <div class="w-full h-[220px] overflow-hidden relative">
-                        <img src="info/Screenshot 2568-07-05 at 00.37.18.png" alt="Professional Airport Arrival and Departure Transportation Services at Suvarnabhumi Airport and Don Mueang Airport in Bangkok, Thailand" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" width="600" height="220" loading="lazy">
+                    <div class="w-full h-[440px] overflow-hidden relative">
+                        <img src="info/airport-service.png" alt="Professional Airport Arrival and Departure Transportation Services at Suvarnabhumi Airport and Don Mueang Airport in Bangkok, Thailand" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" width="600" height="440" loading="lazy">
                     </div>
                     <div class="p-6 flex-grow flex flex-col">
                         <h3 data-i18n="services.arrival.title" class="mb-4 text-dark text-xl font-semibold">Arrival and Departure Services</h3>
@@ -353,8 +355,8 @@
                     </div>
                 </div>
                 <div class="bg-white rounded shadow-custom transition-all duration-300 hover:-translate-y-2 hover:shadow-custom-hover overflow-hidden flex flex-col h-full">
-                    <div class="w-full h-[220px] overflow-hidden relative">
-                        <img src="info/Screenshot 2568-07-04 at 23.58.59.png" alt="Premium Fast Track Transportation Service for Priority Clients in Bangkok City Center, Pattaya, and Chonburi, Thailand" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" width="600" height="220" loading="lazy">
+                    <div class="w-full h-[440px] overflow-hidden relative">
+                        <img src="info/Screenshot 2568-07-04 at 23.58.59.png" alt="Premium Fast Track Transportation Service for Priority Clients in Bangkok City Center, Pattaya, and Chonburi, Thailand" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" width="600" height="440" loading="lazy">
                     </div>
                     <div class="p-6 flex-grow flex flex-col">
                         <h3 data-i18n="services.fastTrack.title" class="mb-4 text-dark text-xl font-semibold">Fast Track Service</h3>

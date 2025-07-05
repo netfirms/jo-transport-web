@@ -77,31 +77,48 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Function to initialize a video that hasn't been loaded yet
         const initializeVideo = function(videoElement) {
-            if (!videoElement.src && videoElement.dataset.src) {
-                videoElement.src = videoElement.dataset.src;
+            const sourceElement = videoElement.querySelector('source');
+            if (sourceElement) {
+                // Make sure the video is loaded
+                videoElement.load(); // Important: need to call load() to ensure the video is ready
+
+                // Add a one-time event listener to confirm the video is loadable
+                videoElement.addEventListener('loadeddata', function onLoaded() {
+                    console.log('Video loaded successfully:', videoElement.id);
+                    videoElement.removeEventListener('loadeddata', onLoaded);
+                });
+
                 return true; // Video was initialized
             }
-            return false; // Video was already initialized
+            return false; // Video initialization failed
         };
 
         // Function to switch between videos
         const switchVideos = function() {
-            // Hide all video containers first
+            console.log('Switching videos. Current video:', currentVideo);
+
+            // Determine next video to show
+            const nextVideo = (currentVideo % 3) + 1; // Cycle through 1, 2, 3
+            console.log('Next video to play:', nextVideo);
+
+            // Initialize the next video if needed
+            if (!videosInitialized[nextVideo - 1]) {
+                if (nextVideo === 2) {
+                    videosInitialized[1] = initializeVideo(video2);
+                    console.log('Initialized video 2');
+                } else if (nextVideo === 3) {
+                    videosInitialized[2] = initializeVideo(video3);
+                    console.log('Initialized video 3');
+                }
+            }
+
+            // Hide all video containers
             video1.parentElement.classList.add('hidden');
             video2Container.classList.add('hidden');
             video3Container.classList.add('hidden');
 
-            // Determine next video to show
-            currentVideo = (currentVideo % 3) + 1; // Cycle through 1, 2, 3
-
-            // Initialize the next video if needed
-            if (!videosInitialized[currentVideo - 1]) {
-                if (currentVideo === 2) {
-                    videosInitialized[1] = initializeVideo(video2);
-                } else if (currentVideo === 3) {
-                    videosInitialized[2] = initializeVideo(video3);
-                }
-            }
+            // Update current video
+            currentVideo = nextVideo;
 
             // Show and play the next video
             let videoName = '';
@@ -132,18 +149,62 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         // Listen for the end of each video
-        video1.addEventListener('ended', switchVideos);
-        video2.addEventListener('ended', switchVideos);
-        video3.addEventListener('ended', switchVideos);
+        video1.addEventListener('ended', function() {
+            console.log('Video 1 ended, switching to video 2');
+            switchVideos();
+        });
 
-        // Preload the second video after the page has loaded
+        video2.addEventListener('ended', function() {
+            console.log('Video 2 ended, switching to video 3');
+            switchVideos();
+        });
+
+        video3.addEventListener('ended', function() {
+            console.log('Video 3 ended, switching back to video 1');
+            switchVideos();
+        });
+
+        // Add error handling for videos
+        [video1, video2, video3].forEach(video => {
+            video.addEventListener('error', function(e) {
+                console.error('Video error:', video.id, e);
+            });
+        });
+
+        // Preload all videos after the page has loaded
         window.addEventListener('load', function() {
-            setTimeout(() => {
-                if (!videosInitialized[1]) {
-                    videosInitialized[1] = initializeVideo(video2);
-                    console.log('Preloaded second video');
+            // Initialize video 1 (already loaded)
+            console.log('Video 1 is ready to play');
+
+            // Make sure video1 is properly loaded
+            if (video1.readyState < 2) {
+                console.log('Ensuring video 1 is loaded...');
+                video1.load();
+            }
+
+            // Initialize video 2 and 3 immediately
+            videosInitialized[1] = initializeVideo(video2);
+            console.log('Preloaded second video');
+
+            videosInitialized[2] = initializeVideo(video3);
+            console.log('Preloaded third video');
+
+            // Make sure video1 has an ended event by forcing a check
+            if (video1.readyState >= 2) {
+                console.log('Video 1 is loaded and ready to play');
+            } else {
+                console.log('Waiting for video 1 to load...');
+                video1.addEventListener('loadeddata', function() {
+                    console.log('Video 1 loaded data event fired');
+                });
+            }
+
+            // Force preload of all videos to ensure they're ready
+            [video1, video2, video3].forEach(video => {
+                if (video.preload !== 'auto') {
+                    video.preload = 'auto';
                 }
-            }, 3000); // Wait 3 seconds after page load
+            });
         });
     };
 
