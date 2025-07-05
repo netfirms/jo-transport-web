@@ -17,13 +17,70 @@ document.addEventListener('DOMContentLoaded', function() {
     const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('nav ul li a');
     const quoteForm = document.getElementById('quote-form');
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
 
     // Current language (default: English)
     let currentLanguage = localStorage.getItem('language') || 'en';
 
-    // Mobile Menu Toggle - Removed as per requirements
+    // Mobile Menu Toggle
+    if (mobileMenuBtn) {
+        mobileMenuBtn.addEventListener('click', function() {
+            nav.style.display = nav.style.display === 'block' ? 'none' : 'block';
 
-    // Close mobile menu when clicking outside - Removed as per requirements
+            // Add mobile-specific styles when menu is open
+            if (nav.style.display === 'block') {
+                nav.classList.add('mobile-nav-open');
+                nav.style.position = 'absolute';
+                nav.style.top = '100%';
+                nav.style.left = '0';
+                nav.style.width = '100%';
+                nav.style.backgroundColor = '#fff';
+                nav.style.boxShadow = '0 4px 10px rgba(0, 0, 0, 0.1)';
+                nav.style.padding = '15px 0';
+                nav.style.zIndex = '1000';
+
+                // Make menu items stack vertically
+                const navUl = nav.querySelector('ul');
+                if (navUl) {
+                    navUl.style.flexDirection = 'column';
+                    navUl.style.alignItems = 'center';
+
+                    // Style individual menu items
+                    const navItems = navUl.querySelectorAll('li');
+                    navItems.forEach(item => {
+                        item.style.margin = '8px 0';
+                        item.style.width = '100%';
+                        item.style.textAlign = 'center';
+                    });
+                }
+            } else {
+                nav.classList.remove('mobile-nav-open');
+                // Reset styles when menu is closed
+                const navUl = nav.querySelector('ul');
+                if (navUl) {
+                    navUl.style.flexDirection = '';
+                    navUl.style.alignItems = '';
+
+                    const navItems = navUl.querySelectorAll('li');
+                    navItems.forEach(item => {
+                        item.style.margin = '';
+                        item.style.width = '';
+                        item.style.textAlign = '';
+                    });
+                }
+            }
+        });
+    }
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(e) {
+        if (nav.classList.contains('mobile-nav-open') && 
+            !nav.contains(e.target) && 
+            !mobileMenuBtn.contains(e.target)) {
+            nav.style.display = 'none';
+            nav.classList.remove('mobile-nav-open');
+        }
+    });
 
     // Smooth scrolling for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
