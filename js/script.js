@@ -7,8 +7,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // 4. Get your EmailJS Public Key, Service ID, and Template ID from the EmailJS dashboard
     // 5. Replace the placeholders below with your actual values
     (function() {
-        // Replace with your actual EmailJS public key
-        emailjs.init("44SbPdv3lcp7pJ3VE");
+        // EmailJS initialization with domain restriction
+        // The key is restricted to jotransportation.com domain in EmailJS dashboard
+        const emailJSKey = "44SbPdv3lcp7pJ3VE";
+
+        // Check if we're in a production environment
+        const isProduction = window.location.hostname === 'jotransportation.com' || 
+                            window.location.hostname === 'www.jotransportation.com';
+
+        // Only initialize EmailJS in production or on localhost for testing
+        if (isProduction || window.location.hostname === 'localhost') {
+            emailjs.init(emailJSKey);
+        }
     })();
 
     // Add event tracking for fleet vehicle cards
@@ -250,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function() {
         quoteForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
-            // Basic form validation
+            // Enhanced form validation with security measures
             const name = document.getElementById('name').value.trim();
             const email = document.getElementById('email').value.trim();
             const phone = document.getElementById('phone').value.trim();
@@ -259,15 +269,43 @@ document.addEventListener('DOMContentLoaded', function() {
             const serviceText = serviceElement.options[serviceElement.selectedIndex].text;
             const message = document.getElementById('message').value.trim();
 
+            // Required fields validation
             if (name === '' || email === '' || service === '') {
                 alert(translations.contact.form.validation.required[currentLanguage]);
                 return;
             }
 
-            // Email validation
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            // Name validation - prevent HTML/script injection
+            const nameRegex = /^[A-Za-z\s\-'.]{2,50}$/;
+            if (!nameRegex.test(name)) {
+                alert("Please enter a valid name (2-50 characters, letters, spaces, and basic punctuation only).");
+                return;
+            }
+
+            // Email validation - more comprehensive
+            const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
             if (!emailRegex.test(email)) {
                 alert(translations.contact.form.validation.email[currentLanguage]);
+                return;
+            }
+
+            // Phone validation - allow international formats
+            if (phone && !/^[+\d\s\-()]{7,20}$/.test(phone)) {
+                alert("Please enter a valid phone number.");
+                return;
+            }
+
+            // Message validation - prevent excessive length and script injection
+            if (message && (message.length > 1000 || /<script|<\/script|javascript:/i.test(message))) {
+                alert("Please enter a valid message (max 1000 characters, no scripts).");
+                return;
+            }
+
+            // Rate limiting - check if form was submitted recently
+            const lastSubmission = localStorage.getItem('lastFormSubmission');
+            const now = Date.now();
+            if (lastSubmission && (now - parseInt(lastSubmission)) < 60000) { // 1 minute
+                alert("Please wait a moment before submitting again.");
                 return;
             }
 
@@ -286,29 +324,64 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
 
-            // Prepare template parameters for EmailJS
-            // These parameter names should match the template variables in your EmailJS template
-            const templateParams = {
-                from_name: name,
-                from_email: email,
-                from_phone: phone,
-                service_type: serviceText,
-                message: `${name} \n (${email} \n ${phone}) \n- ${serviceText} \n- ${message}`,
-                title: `New Service Request: ${serviceText} `,
-                name: name,
-                email: email,
-                phone: phone,
-                service: serviceText
+            // Helper function to sanitize text for XSS prevention
+            const sanitizeText = (text) => {
+                return text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
             };
 
-            // Send email using EmailJS
-            // Replace 'YOUR_SERVICE_ID' with your actual EmailJS service ID (e.g., 'gmail')
-            // Replace 'YOUR_TEMPLATE_ID' with your actual EmailJS template ID (e.g., 'template_abc123')
-            emailjs.send('service_capnnnq', 'template_g5oqsya', templateParams)
-                .then(function(response) {
-                    console.log('SUCCESS!', response.status, response.text);
+            // Prepare template parameters for EmailJS with sanitization
+            const templateParams = {
+                from_name: sanitizeText(name),
+                from_email: sanitizeText(email),
+                from_phone: sanitizeText(phone),
+                service_type: sanitizeText(serviceText),
+                message: sanitizeText(`${name} \n (${email} \n ${phone}) \n- ${serviceText} \n- ${message}`),
+                title: sanitizeText(`New Service Request: ${serviceText}`),
+                name: sanitizeText(name),
+                email: sanitizeText(email),
+                phone: sanitizeText(phone),
+                service: sanitizeText(serviceText)
+            };
 
-                    // Show success message with a more modern approach
+            // Check if we're in a production environment
+            const isProduction = window.location.hostname === 'jotransportation.com' || 
+                                window.location.hostname === 'www.jotransportation.com';
+
+            // EmailJS service and template IDs
+            const serviceID = 'service_capnnnq';
+            const templateID = 'template_g5oqsya';
+
+            // Only send emails in production or on localhost for testing
+            if (isProduction || window.location.hostname === 'localhost') {
+                // Send email using EmailJS
+                emailjs.send(serviceID, templateID, templateParams)
+                    .then(function(response) {
+                        // Record successful submission time for rate limiting
+                        localStorage.setItem('lastFormSubmission', Date.now().toString());
+
+                        // Show success message with a more modern approach and safe HTML
+                        const formContainer = quoteForm.parentElement;
+                        formContainer.innerHTML = `
+                            <div class="success-message" style="text-align: center; padding: 40px 20px;">
+                                <i class="fas fa-check-circle" style="font-size: 60px; color: var(--primary-color); margin-bottom: 20px;"></i>
+                                <h3 style="margin-bottom: 15px; color: var(--secondary-color);">${translations.contact.form.success.title[currentLanguage]}</h3>
+                                <p style="margin-bottom: 25px; color: var(--text-light);">${translations.contact.form.success.message[currentLanguage]}</p>
+                                <button onclick="location.reload()" class="btn">${translations.contact.form.success.button[currentLanguage]}</button>
+                            </div>
+                        `;
+                    })
+                    .catch(function(error) {
+                        // Handle error without logging sensitive information
+                        alert(translations.contact.form.validation.error[currentLanguage]);
+
+                        // Reset button state
+                        submitButton.disabled = false;
+                        submitButton.textContent = originalButtonText;
+                    });
+            } else {
+                // In development environments, simulate success without sending actual emails
+                setTimeout(() => {
+                    // Show success message
                     const formContainer = quoteForm.parentElement;
                     formContainer.innerHTML = `
                         <div class="success-message" style="text-align: center; padding: 40px 20px;">
@@ -318,15 +391,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             <button onclick="location.reload()" class="btn">${translations.contact.form.success.button[currentLanguage]}</button>
                         </div>
                     `;
-                })
-                .catch(function(error) {
-                    console.log('FAILED...', error);
-                    alert(translations.contact.form.validation.error[currentLanguage]);
-
-                    // Reset button state
-                    submitButton.disabled = false;
-                    submitButton.textContent = originalButtonText;
-                });
+                }, 1000);
+            }
         });
     }
 

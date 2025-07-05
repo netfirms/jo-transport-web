@@ -2,8 +2,8 @@
 // This file initializes Firebase and Google Analytics
 
 // Initialize Firebase with your web app's Firebase configuration
+// Config is restricted to this domain through Firebase Console settings
 const firebaseConfig = {
-  // Replace with your actual Firebase config values
   apiKey: "AIzaSyCBHStY61enxDbTbOYpKdUBh_2OCQco1Kk",
   authDomain: "jo-transport-web.firebaseapp.com",
   projectId: "jo-transport-web",
@@ -14,7 +14,21 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+const firebaseApp = firebase.initializeApp(firebaseConfig);
+
+// Check if we're in a production environment
+const isProduction = window.location.hostname === 'jotransportation.com' || 
+                     window.location.hostname === 'www.jotransportation.com';
+
+// Initialize App Check in production
+if (isProduction && typeof firebase.appCheck !== 'undefined') {
+  // Use reCAPTCHA v3 for App Check
+  const appCheck = firebase.appCheck();
+  // Replace 'YOUR_RECAPTCHA_SITE_KEY' with your actual reCAPTCHA site key
+  // You need to register for reCAPTCHA v3 in Google Cloud Console
+  // and add the site key to your Firebase project
+  appCheck.activate('6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', true);
+}
 
 // Initialize Analytics
 const analytics = firebase.analytics();
@@ -26,10 +40,11 @@ analytics.logEvent('page_view', {
   page_path: window.location.pathname
 });
 
-// Function to track custom events
+// Function to track custom events - removed console logging for security
 function trackEvent(eventName, eventParams = {}) {
-  analytics.logEvent(eventName, eventParams);
-  console.log(`Event tracked: ${eventName}`, eventParams);
+  if (typeof analytics !== 'undefined' && analytics) {
+    analytics.logEvent(eventName, eventParams);
+  }
 }
 
 // Track outbound links
