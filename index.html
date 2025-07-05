@@ -2,12 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>J.O Transportation and service Co..Ltd. - Premium Transportation Services</title>
     <meta name="description" content="Professional airport transfers with Arrival, Departure, and Fast Track Services. Luxury fleet includes Toyota Alphard, Commuter vans, Fortuner SUVs, and Camry sedans.">
     <meta name="keywords" content="airport transfer, transportation service, luxury transport, fast track service, Toyota Alphard, Commuter van, Fortuner, Camry, Thailand transport">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://jotransportation.com/">
+
+    <!-- Performance optimizations -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -26,10 +33,35 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="info/Screenshot_2568-07-05_at_00.11.34-removebg-preview.png">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <!-- Critical CSS inline for faster rendering -->
+    <style>
+        :root {
+            --primary-color: #B8860B;
+            --secondary-color: #1A1A1A;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+
+    <!-- Deferred non-critical CSS -->
+    <link rel="stylesheet" href="css/styles.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="css/styles.css"></noscript>
+
+    <!-- Preload critical fonts -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Playfair+Display:wght@400;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet"></noscript>
+
+    <!-- Defer non-critical scripts -->
+    <script src="https://cdn.tailwindcss.com" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"></noscript>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js" defer></script>
     <script>
         tailwind.config = {
             theme: {
@@ -199,7 +231,7 @@
         <div class="container mx-auto px-5 flex justify-between items-center">
             <div class="logo">
                 <a href="#home" class="flex items-center no-underline">
-                    <img src="info/Screenshot_2568-07-05_at_00.11.34-removebg-preview.png" alt="J.O Transportation and service Co..Ltd. Official Logo" class="h-[45px] w-auto mr-3">
+                    <img src="info/Screenshot_2568-07-05_at_00.11.34-removebg-preview.png" alt="J.O Transportation and service Co..Ltd. Official Logo" class="h-[45px] w-auto mr-3" width="45" height="45">
                     <h1 class="text-dark text-xl font-bold tracking-tight">J.O. Transportation and service</h1>
                 </a>
             </div>
@@ -237,23 +269,25 @@
             <!-- Video overlay for better text readability -->
             <div class="absolute inset-0 bg-black opacity-50 z-[1]"></div>
 
-            <!-- First video -->
-            <video id="hero-video-1" class="absolute inset-0 w-full h-full object-cover" autoplay muted playsinline>
+            <!-- Optimized video loading - only load first video initially -->
+            <video id="hero-video-1" class="absolute inset-0 w-full h-full object-cover" autoplay muted playsinline preload="metadata" poster="info/Screenshot 2568-07-04 at 23.58.59.png">
                 <source src="images/Airport_Services_Video_Creation_Request.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
 
-            <!-- Second video (initially hidden) -->
-            <video id="hero-video-2" class="absolute inset-0 w-full h-full object-cover hidden" autoplay muted playsinline>
-                <source src="images/Airport_Transportation_Video_Plan.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
+            <!-- Second video (loaded on demand) -->
+            <div id="hero-video-2-container" class="absolute inset-0 w-full h-full hidden">
+                <video id="hero-video-2" class="absolute inset-0 w-full h-full object-cover" muted playsinline preload="none" data-src="images/Airport_Transportation_Video_Plan.mp4" poster="info/Screenshot 2568-07-04 at 23.59.10.png">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
 
-            <!-- Third video (initially hidden) -->
-            <video id="hero-video-3" class="absolute inset-0 w-full h-full object-cover hidden" autoplay muted playsinline>
-                <source src="images/Video_Prompt_for_Airport_Services.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
+            <!-- Third video (loaded on demand) -->
+            <div id="hero-video-3-container" class="absolute inset-0 w-full h-full hidden">
+                <video id="hero-video-3" class="absolute inset-0 w-full h-full object-cover" muted playsinline preload="none" data-src="images/Video_Prompt_for_Airport_Services.mp4" poster="info/Screenshot 2568-07-04 at 23.59.21.png">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
         </div>
 
         <div class="container mx-auto px-5 relative z-10">
@@ -279,7 +313,7 @@
                     </div>
                 </div>
                 <div class="flex-1 rounded overflow-hidden shadow-custom relative">
-                    <img src="images/about-team.png" alt="Professional J.O Transportation and service Co..Ltd. Team of Experienced Drivers and Staff" class="w-full h-auto">
+                    <img src="images/about-team.png" alt="Professional J.O Transportation and service Co..Ltd. Team of Experienced Drivers and Staff" class="w-full h-auto" width="600" height="400" loading="lazy">
                 </div>
             </div>
         </div>
@@ -291,7 +325,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="bg-white rounded shadow-custom transition-all duration-300 hover:-translate-y-2 hover:shadow-custom-hover overflow-hidden flex flex-col h-full">
                     <div class="w-full h-[220px] overflow-hidden relative">
-                        <img src="info/Screenshot 2568-07-05 at 00.37.18.png" alt="Professional Airport Arrival and Departure Transportation Services in Thailand" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                        <img src="info/Screenshot 2568-07-05 at 00.37.18.png" alt="Professional Airport Arrival and Departure Transportation Services in Thailand" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" width="600" height="220" loading="lazy">
                     </div>
                     <div class="p-6 flex-grow flex flex-col">
                         <h3 data-i18n="services.arrival.title" class="mb-4 text-dark text-xl font-semibold">Arrival and Departure Services</h3>
@@ -301,7 +335,7 @@
                 </div>
                 <div class="bg-white rounded shadow-custom transition-all duration-300 hover:-translate-y-2 hover:shadow-custom-hover overflow-hidden flex flex-col h-full">
                     <div class="w-full h-[220px] overflow-hidden relative">
-                        <img src="info/Screenshot 2568-07-04 at 23.58.59.png" alt="Premium Fast Track Transportation Service for Priority Clients in Thailand" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                        <img src="info/Screenshot 2568-07-04 at 23.58.59.png" alt="Premium Fast Track Transportation Service for Priority Clients in Thailand" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" width="600" height="220" loading="lazy">
                     </div>
                     <div class="p-6 flex-grow flex flex-col">
                         <h3 data-i18n="services.fastTrack.title" class="mb-4 text-dark text-xl font-semibold">Fast Track Service</h3>
@@ -320,7 +354,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div class="bg-white rounded shadow-custom transition-all duration-300 hover:-translate-y-2 hover:shadow-custom-hover overflow-hidden h-full flex flex-col">
                     <div class="relative overflow-hidden h-[220px]">
-                        <img src="info/c1.png" alt="Luxury Toyota Alphard Premium Vehicle for VIP Airport Transfers in Thailand" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                        <img src="info/c1.png" alt="Luxury Toyota Alphard Premium Vehicle for VIP Airport Transfers in Thailand" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" width="300" height="220" loading="lazy">
                         <div data-i18n="fleet.vehicles.alphard.type" class="absolute top-4 right-4 bg-primary text-white px-3 py-1 rounded text-xs font-semibold tracking-wide shadow-sm">Premium</div>
                     </div>
                     <div class="p-6 flex-grow">
@@ -330,7 +364,7 @@
                 </div>
                 <div class="bg-white rounded shadow-custom transition-all duration-300 hover:-translate-y-2 hover:shadow-custom-hover overflow-hidden h-full flex flex-col">
                     <div class="relative overflow-hidden h-[220px]">
-                        <img src="info/c2.png" alt="Toyota Commuter Van for Group Airport Transfers and Transportation in Thailand" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                        <img src="info/c2.png" alt="Toyota Commuter Van for Group Airport Transfers and Transportation in Thailand" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" width="300" height="220" loading="lazy">
                         <div data-i18n="fleet.vehicles.commuter.type" class="absolute top-4 right-4 bg-primary text-white px-3 py-1 rounded text-xs font-semibold tracking-wide shadow-sm">Group</div>
                     </div>
                     <div class="p-6 flex-grow">
@@ -340,7 +374,7 @@
                 </div>
                 <div class="bg-white rounded shadow-custom transition-all duration-300 hover:-translate-y-2 hover:shadow-custom-hover overflow-hidden h-full flex flex-col">
                     <div class="relative overflow-hidden h-[220px]">
-                        <img src="info/c3.png" alt="Toyota Fortuner SUV for Comfortable Airport Transportation and Private Transfers in Thailand" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                        <img src="info/c3.png" alt="Toyota Fortuner SUV for Comfortable Airport Transportation and Private Transfers in Thailand" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" width="300" height="220" loading="lazy">
                         <div data-i18n="fleet.vehicles.fortuner.type" class="absolute top-4 right-4 bg-primary text-white px-3 py-1 rounded text-xs font-semibold tracking-wide shadow-sm">SUV</div>
                     </div>
                     <div class="p-6 flex-grow">
@@ -350,7 +384,7 @@
                 </div>
                 <div class="bg-white rounded shadow-custom transition-all duration-300 hover:-translate-y-2 hover:shadow-custom-hover overflow-hidden h-full flex flex-col">
                     <div class="relative overflow-hidden h-[220px]">
-                        <img src="info/c4.png" alt="Toyota Camry Sedan for Executive Airport Transfers and Business Transportation in Thailand" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                        <img src="info/c4.png" alt="Toyota Camry Sedan for Executive Airport Transfers and Business Transportation in Thailand" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" width="300" height="220" loading="lazy">
                         <div data-i18n="fleet.vehicles.camry.type" class="absolute top-4 right-4 bg-primary text-white px-3 py-1 rounded text-xs font-semibold tracking-wide shadow-sm">Sedan</div>
                     </div>
                     <div class="p-6 flex-grow">
@@ -366,7 +400,7 @@
         <div class="container mx-auto px-5">
             <h2 data-i18n="customers.title" class="section-title text-center mb-12 text-3xl md:text-4xl text-dark relative pb-4 font-secondary font-bold">Our Customers</h2>
             <div class="flex justify-center items-center">
-                <img src="info/Screenshot 2568-07-04 at 23.59.21.png" alt="J.O Transportation and service Co..Ltd. Trusted Corporate Clients and Business Partners in Thailand" class="max-w-full rounded shadow-md">
+                <img src="info/Screenshot 2568-07-04 at 23.59.21.png" alt="J.O Transportation and service Co..Ltd. Trusted Corporate Clients and Business Partners in Thailand" class="max-w-full rounded shadow-md" width="800" height="400" loading="lazy">
             </div>
         </div>
     </section>
@@ -549,13 +583,13 @@
     }
     </script>
 
-    <script src="js/translations.js"></script>
-    <script src="js/script.js"></script>
+    <script src="js/translations.js" defer></script>
+    <script src="js/script.js" defer></script>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
+    <!-- Firebase SDK - Optimized loading -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js" defer></script>
     <!-- Firebase Initialization -->
-    <script src="js/firebase-init.js"></script>
+    <script src="js/firebase-init.js" defer></script>
 </body>
 </html>

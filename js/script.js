@@ -51,43 +51,64 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Hero section video handling
+    // Hero section video handling with lazy loading
     const setupHeroVideos = function() {
         const video1 = document.getElementById('hero-video-1');
         const video2 = document.getElementById('hero-video-2');
         const video3 = document.getElementById('hero-video-3');
+        const video2Container = document.getElementById('hero-video-2-container');
+        const video3Container = document.getElementById('hero-video-3-container');
 
         if (!video1 || !video2 || !video3) return; // Exit if videos don't exist
 
         // Track current active video (1, 2, or 3)
         let currentVideo = 1;
+        let videosInitialized = [true, false, false]; // Track which videos have been initialized
+
+        // Function to initialize a video that hasn't been loaded yet
+        const initializeVideo = function(videoElement) {
+            if (!videoElement.src && videoElement.dataset.src) {
+                videoElement.src = videoElement.dataset.src;
+                return true; // Video was initialized
+            }
+            return false; // Video was already initialized
+        };
 
         // Function to switch between videos
         const switchVideos = function() {
-            // Hide all videos first
-            video1.classList.add('hidden');
-            video2.classList.add('hidden');
-            video3.classList.add('hidden');
+            // Hide all video containers first
+            video1.parentElement.classList.add('hidden');
+            video2Container.classList.add('hidden');
+            video3Container.classList.add('hidden');
 
             // Determine next video to show
             currentVideo = (currentVideo % 3) + 1; // Cycle through 1, 2, 3
 
+            // Initialize the next video if needed
+            if (!videosInitialized[currentVideo - 1]) {
+                if (currentVideo === 2) {
+                    videosInitialized[1] = initializeVideo(video2);
+                } else if (currentVideo === 3) {
+                    videosInitialized[2] = initializeVideo(video3);
+                }
+            }
+
             // Show and play the next video
             let videoName = '';
             if (currentVideo === 1) {
-                video1.classList.remove('hidden');
+                video1.parentElement.classList.remove('hidden');
                 video1.currentTime = 0;
-                video1.play();
+                video1.play().catch(e => console.log('Video play error:', e));
                 videoName = 'Airport_Services_Video';
             } else if (currentVideo === 2) {
-                video2.classList.remove('hidden');
+                video2Container.classList.remove('hidden');
                 video2.currentTime = 0;
-                video2.play();
+                video2.play().catch(e => console.log('Video play error:', e));
                 videoName = 'Airport_Transportation_Video';
             } else { // currentVideo === 3
-                video3.classList.remove('hidden');
+                video3Container.classList.remove('hidden');
                 video3.currentTime = 0;
-                video3.play();
+                video3.play().catch(e => console.log('Video play error:', e));
                 videoName = 'Video_Prompt_for_Airport_Services';
             }
 
@@ -104,6 +125,16 @@ document.addEventListener('DOMContentLoaded', function() {
         video1.addEventListener('ended', switchVideos);
         video2.addEventListener('ended', switchVideos);
         video3.addEventListener('ended', switchVideos);
+
+        // Preload the second video after the page has loaded
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                if (!videosInitialized[1]) {
+                    videosInitialized[1] = initializeVideo(video2);
+                    console.log('Preloaded second video');
+                }
+            }, 3000); // Wait 3 seconds after page load
+        });
     };
 
     // Initialize hero videos

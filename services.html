@@ -2,12 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Services - J.O Transportation and service Co..Ltd.</title>
     <meta name="description" content="Explore our comprehensive range of transportation services including Nationwide Transport, Secure Transport, All Vehicle Types, and Corporate Services.">
     <meta name="keywords" content="transportation services, airport transfer, secure transport, corporate transport, Thailand transport, luxury transport, vehicle transport">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://jotransportation.com/services.html">
+
+    <!-- Performance optimizations -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -26,8 +33,25 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="info/Screenshot_2568-07-05_at_00.11.34-removebg-preview.png">
 
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Critical CSS inline for faster rendering -->
+    <style>
+        :root {
+            --primary-color: #B8860B;
+            --secondary-color: #1A1A1A;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+
+    <!-- Deferred non-critical CSS -->
+    <link rel="stylesheet" href="css/styles.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="css/styles.css"></noscript>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"></noscript>
     <style>
         /* Additional styles for the services page */
         .service-detail {
@@ -125,27 +149,14 @@
             padding: 14px 28px;
         }
     </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Reveal animations for service items
-            const serviceItems = document.querySelectorAll('.service-detail-item');
-
-            setTimeout(function() {
-                serviceItems.forEach((item, index) => {
-                    setTimeout(function() {
-                        item.classList.add('visible');
-                    }, index * 150);
-                });
-            }, 300);
-        });
-    </script>
+    <!-- Moved to external script for better performance -->
 </head>
 <body>
     <header>
         <div class="container">
             <div class="logo">
                 <a href="index.html">
-                    <img src="info/Screenshot_2568-07-05_at_00.11.34-removebg-preview.png" alt="J.O Transportation and service Co..Ltd. Official Logo">
+                    <img src="info/Screenshot_2568-07-05_at_00.11.34-removebg-preview.png" alt="J.O Transportation and service Co..Ltd. Official Logo" width="45" height="45">
                     <h1>J.O Transportation and service Co..Ltd.</h1>
                 </a>
             </div>
@@ -171,7 +182,7 @@
 
             <div class="service-detail-content">
                 <div class="service-detail-item">
-                    <img src="info/Screenshot 2568-07-04 at 23.58.59.png" alt="Professional Nationwide Transportation Services for Safe and Reliable Vehicle Transport in Thailand" id="nationwide">
+                    <img src="info/Screenshot 2568-07-04 at 23.58.59.png" alt="Professional Nationwide Transportation Services for Safe and Reliable Vehicle Transport in Thailand" id="nationwide" width="600" height="250" loading="lazy">
                     <div class="service-detail-info">
                         <h3>Nationwide Transport</h3>
                         <p>Our nationwide transport service offers reliable and efficient transportation solutions across the country. We ensure your vehicle reaches its destination safely and on time.</p>
@@ -187,7 +198,7 @@
                 </div>
 
                 <div class="service-detail-item">
-                    <img src="info/Screenshot 2568-07-04 at 23.58.44.png" alt="Premium Secure Transport Services for High-Value and Luxury Vehicles with Enhanced Protection in Thailand" id="secure">
+                    <img src="info/Screenshot 2568-07-04 at 23.58.44.png" alt="Premium Secure Transport Services for High-Value and Luxury Vehicles with Enhanced Protection in Thailand" id="secure" width="600" height="250" loading="lazy">
                     <div class="service-detail-info">
                         <h3>Secure Transport</h3>
                         <p>Our secure transport service provides enhanced protection for your valuable vehicles. We use specialized equipment and follow strict protocols to ensure maximum security during transit.</p>
@@ -203,7 +214,7 @@
                 </div>
 
                 <div class="service-detail-item">
-                    <img src="images/car-carriers.png" alt="Comprehensive Transportation Services for All Vehicle Types including Sedans, SUVs, Luxury Cars, and Specialty Vehicles in Thailand" id="all-vehicles">
+                    <img src="images/car-carriers.png" alt="Comprehensive Transportation Services for All Vehicle Types including Sedans, SUVs, Luxury Cars, and Specialty Vehicles in Thailand" id="all-vehicles" width="600" height="250" loading="lazy">
                     <div class="service-detail-info">
                         <h3>All Vehicle Types</h3>
                         <p>We have the expertise and equipment to transport all types of vehicles, from standard cars to specialty automobiles.</p>
@@ -219,7 +230,7 @@
                 </div>
 
                 <div class="service-detail-item">
-                    <img src="images/flatbed-truck.png" alt="Specialized Corporate Transportation Services for Businesses, Dealerships, and Fleet Management in Thailand" id="corporate">
+                    <img src="images/flatbed-truck.png" alt="Specialized Corporate Transportation Services for Businesses, Dealerships, and Fleet Management in Thailand" id="corporate" width="600" height="250" loading="lazy">
                     <div class="service-detail-info">
                         <h3>Corporate Services</h3>
                         <p>Our corporate services are tailored for businesses that require regular or bulk vehicle transportation. We offer specialized solutions for dealerships, auctions, and corporate fleet relocations.</p>
@@ -344,12 +355,13 @@
     }
     </script>
 
-    <script src="js/script.js"></script>
+    <script src="js/script.js" defer></script>
+    <script src="js/services.js" defer></script>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
+    <!-- Firebase SDK - Optimized loading -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js" defer></script>
     <!-- Firebase Initialization -->
-    <script src="js/firebase-init.js"></script>
+    <script src="js/firebase-init.js" defer></script>
 </body>
 </html>
