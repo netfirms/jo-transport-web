@@ -14,24 +14,24 @@
                 extend: {
                     colors: {
                         primary: '#D4AF37',
-                        secondary: '#0F1E3D',
+                        secondary: '#121212',
                         accent: '#D4AF37',
-                        light: '#F8F7F4',
-                        dark: '#0F1E3D',
-                        textColor: '#333333',
-                        textLight: '#666666',
-                        borderColor: '#E6E6E6',
+                        light: '#1E1E1E',
+                        dark: '#121212',
+                        textColor: '#E0E0E0',
+                        textLight: '#A0A0A0',
+                        borderColor: '#2A2A2A',
                         success: '#D4AF37',
-                        bgLight: '#F8F7F4',
-                        bgWhite: '#ffffff',
+                        bgLight: '#1A1A1A',
+                        bgWhite: '#1E1E1E',
                     },
                     fontFamily: {
                         primary: ['Montserrat', 'sans-serif'],
                         secondary: ['Playfair Display', 'serif'],
                     },
                     boxShadow: {
-                        'custom': '0 10px 30px rgba(15, 30, 61, 0.08)',
-                        'custom-hover': '0 15px 35px rgba(15, 30, 61, 0.15)',
+                        'custom': '0 10px 30px rgba(0, 0, 0, 0.3)',
+                        'custom-hover': '0 15px 35px rgba(0, 0, 0, 0.5)',
                     },
                     borderRadius: {
                         'custom': '8px',
@@ -50,7 +50,7 @@
 
         /* Custom styles that can't be easily replaced with Tailwind */
         .hero-bg {
-            background: linear-gradient(rgba(15, 30, 61, 0.85), rgba(15, 30, 61, 0.75)), url('../images/hero-background.png') no-repeat center center/cover;
+            background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(18, 18, 18, 0.85)), url('../images/hero-background.png') no-repeat center center/cover;
         }
 
         .hero::before {
@@ -60,7 +60,7 @@
             left: 0;
             width: 100%;
             height: 150px;
-            background: linear-gradient(to top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+            background: linear-gradient(to top, rgba(18, 18, 18, 1), rgba(18, 18, 18, 0));
             z-index: 1;
         }
 
@@ -95,9 +95,10 @@
             left: 50%;
             transform: translateX(-50%);
             width: 60px;
-            height: 4px;
-            background-color: #00b14f;
-            border-radius: 2px;
+            height: 2px;
+            background-color: var(--primary-color);
+            border-radius: 0;
+            box-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
         }
 
         .footer-links ul li a::before {

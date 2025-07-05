@@ -2,21 +2,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
 
 :root {
-    --primary-color: #D4AF37; /* Gold */
-    --secondary-color: #0F1E3D; /* Deep Navy */
-    --accent-color: #D4AF37; /* Gold */
-    --light-color: #F8F7F4; /* Cream */
-    --dark-color: #0F1E3D; /* Deep Navy */
-    --text-color: #333333;
-    --text-light: #666666;
-    --border-color: #E6E6E6;
-    --success-color: #D4AF37; /* Gold */
-    --bg-light: #F8F7F4; /* Cream */
-    --bg-white: #FFFFFF;
-    --shadow: 0 10px 30px rgba(15, 30, 61, 0.08);
-    --shadow-hover: 0 15px 35px rgba(15, 30, 61, 0.15);
-    --font-primary: 'Montserrat', sans-serif;
-    --font-secondary: 'Playfair Display', serif;
+    --primary-color: #D4AF37; /* Metallic Gold */
+    --secondary-color: #121212; /* Dark Charcoal */
+    --accent-color: #D4AF37; /* Metallic Gold */
+    --light-color: #1E1E1E; /* Lighter Charcoal */
+    --dark-color: #121212; /* Dark Charcoal */
+    --text-color: #E0E0E0; /* Light Gray for text */
+    --text-light: #A0A0A0; /* Medium Gray for secondary text */
+    --border-color: #2A2A2A; /* Dark Gray for borders */
+    --success-color: #D4AF37; /* Metallic Gold */
+    --bg-light: #1A1A1A; /* Slightly lighter than darkest */
+    --bg-white: #1E1E1E; /* Lighter Charcoal instead of white */
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    --shadow-hover: 0 15px 35px rgba(0, 0, 0, 0.5);
+    --font-primary: 'Montserrat', sans-serif; /* Clean sans-serif for body */
+    --font-secondary: 'Playfair Display', serif; /* Sophisticated serif for titles */
     --transition: all 0.3s ease;
     --border-radius: 8px;
     --border-radius-sm: 4px;
@@ -37,8 +37,9 @@ body {
     font-family: var(--font-primary);
     line-height: 1.6;
     color: var(--text-color);
-    background-color: var(--bg-white);
-    font-weight: 400;
+    background-color: var(--secondary-color);
+    font-weight: 300;
+    letter-spacing: 0.3px;
 }
 
 .container {
@@ -71,36 +72,40 @@ img {
 .btn {
     display: inline-block;
     background-color: var(--primary-color);
-    color: var(--secondary-color);
-    padding: 14px 28px;
+    color: var(--dark-color);
+    padding: 14px 32px;
     border: 2px solid var(--primary-color);
-    border-radius: 4px;
+    border-radius: 2px;
     cursor: pointer;
-    font-weight: 600;
-    font-size: 15px;
-    transition: var(--transition);
-    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
-    letter-spacing: 1px;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.4s ease;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    letter-spacing: 2px;
     text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
 }
 
 .btn:hover {
     background-color: transparent;
     color: var(--primary-color);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(212, 175, 55, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
+    border-color: var(--primary-color);
 }
 
 .section-title {
     text-align: center;
     margin-bottom: 60px;
     font-size: 38px;
-    color: var(--secondary-color);
+    color: var(--primary-color);
     position: relative;
     padding-bottom: 20px;
     font-family: var(--font-secondary);
-    font-weight: 700;
-    letter-spacing: 1.2px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: none;
 }
 
 .section-title::after {
@@ -109,10 +114,11 @@ img {
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 80px;
+    width: 60px;
     height: 2px;
     background-color: var(--accent-color);
-    border-radius: 1px;
+    border-radius: 0;
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
 }
 
 .section-description {
@@ -124,7 +130,7 @@ img {
 
 /* Header Styles */
 header {
-    background-color: rgba(255, 255, 255, 0.98);
+    background-color: rgba(18, 18, 18, 0.95);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     box-shadow: var(--shadow);
@@ -135,12 +141,13 @@ header {
     z-index: 1000;
     transition: var(--transition);
     padding: 15px 0;
-    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
 }
 
 header.scrolled {
     padding: 10px 0;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    background-color: rgba(18, 18, 18, 0.98);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 header .container {
@@ -178,19 +185,21 @@ nav ul li {
 }
 
 nav ul li a {
-    color: var(--dark-color);
-    font-weight: 500;
+    color: var(--text-color);
+    font-weight: 400;
     padding: 10px 18px;
     position: relative;
     border-radius: var(--border-radius-sm);
     transition: var(--transition);
     font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
 nav ul li a:hover,
 nav ul li a.active {
     color: var(--primary-color);
-    background-color: rgba(212, 175, 55, 0.08);
+    background-color: rgba(212, 175, 55, 0.1);
 }
 
 .mobile-menu-btn {
@@ -214,7 +223,7 @@ nav ul li a.active {
 /* Hero Section */
 .hero {
     min-height: 100vh;
-    background: linear-gradient(rgba(15, 30, 61, 0.85), rgba(15, 30, 61, 0.75)), url('../images/hero-background.png') no-repeat center center/cover;
+    background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(18, 18, 18, 0.85)), url('../images/hero-background.png') no-repeat center center/cover;
     display: flex;
     align-items: center;
     text-align: center;
@@ -222,7 +231,7 @@ nav ul li a.active {
     margin-top: 0;
     position: relative;
     padding: 120px 0 80px;
-    box-shadow: inset 0 -10px 20px rgba(212, 175, 55, 0.05);
+    box-shadow: inset 0 -10px 20px rgba(212, 175, 55, 0.1);
 }
 
 .hero::before {
@@ -232,7 +241,7 @@ nav ul li a.active {
     left: 0;
     width: 100%;
     height: 150px;
-    background: linear-gradient(to top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+    background: linear-gradient(to top, rgba(18, 18, 18, 1), rgba(18, 18, 18, 0));
     z-index: 1;
 }
 
@@ -262,8 +271,8 @@ nav ul li a.active {
     font-weight: 700;
     font-family: var(--font-secondary);
     line-height: 1.2;
-    letter-spacing: 1px;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    letter-spacing: 1.5px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
     color: #FFFFFF;
     position: relative;
     display: inline-block;
@@ -276,8 +285,9 @@ nav ul li a.active {
     left: 50%;
     transform: translateX(-50%);
     width: 120px;
-    height: 1px;
+    height: 2px;
     background-color: var(--primary-color);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
 }
 
 .hero-content p {
@@ -332,6 +342,18 @@ nav ul li a.active {
 .about {
     padding: 100px 0;
     background-color: var(--bg-white);
+    position: relative;
+    overflow: hidden;
+}
+
+.about::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, rgba(212, 175, 55, 0), rgba(212, 175, 55, 0.5), rgba(212, 175, 55, 0));
 }
 
 .about-content {
@@ -467,12 +489,12 @@ nav ul li a.active {
 
 .service-card {
     background-color: var(--bg-white);
-    border-radius: var(--border-radius);
+    border-radius: 0;
     box-shadow: var(--shadow);
     transition: all 0.4s ease;
     position: relative;
     overflow: hidden;
-    border: 1px solid rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -510,9 +532,11 @@ nav ul li a.active {
 
 .service-card h3 {
     margin-bottom: 15px;
-    color: var(--secondary-color);
+    color: var(--primary-color);
     font-size: 22px;
-    font-weight: 600;
+    font-weight: 500;
+    font-family: var(--font-secondary);
+    letter-spacing: 0.5px;
 }
 
 .service-card p {
@@ -543,11 +567,11 @@ nav ul li a.active {
 
 .fleet-item {
     background-color: var(--bg-white);
-    border-radius: var(--border-radius);
+    border-radius: 0;
     overflow: hidden;
     box-shadow: var(--shadow);
     transition: all 0.4s ease;
-    border: 1px solid rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     position: relative;
     height: 100%;
     display: flex;
@@ -557,6 +581,7 @@ nav ul li a.active {
 .fleet-item:hover {
     transform: translateY(-10px);
     box-shadow: var(--shadow-hover);
+    border-color: rgba(212, 175, 55, 0.4);
 }
 
 .fleet-item-image {
@@ -585,10 +610,11 @@ nav ul li a.active {
 
 .fleet-item h3 {
     margin-bottom: 10px;
-    color: var(--secondary-color);
-    font-weight: 600;
+    color: var(--primary-color);
+    font-weight: 500;
     font-family: var(--font-secondary);
     font-size: 20px;
+    letter-spacing: 0.5px;
 }
 
 .fleet-item p {
@@ -601,13 +627,13 @@ nav ul li a.active {
     top: 15px;
     right: 15px;
     background-color: var(--primary-color);
-    color: var(--secondary-color);
-    padding: 6px 12px;
-    border-radius: 2px;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    color: var(--dark-color);
+    padding: 6px 14px;
+    border-radius: 0;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     text-transform: uppercase;
 }
 
@@ -690,15 +716,16 @@ nav ul li a.active {
     gap: 18px;
     background-color: var(--bg-white);
     padding: 25px;
-    border-radius: var(--border-radius);
+    border-radius: 0;
     box-shadow: var(--shadow);
     transition: var(--transition);
-    border: 1px solid rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.2);
 }
 
 .contact-item:hover {
     transform: translateY(-5px);
     box-shadow: var(--shadow-hover);
+    border-color: rgba(212, 175, 55, 0.4);
 }
 
 .contact-item i {
@@ -730,22 +757,25 @@ nav ul li a.active {
 .contact-form {
     background-color: var(--bg-white);
     padding: 40px;
-    border-radius: var(--border-radius);
+    border-radius: 0;
     box-shadow: var(--shadow);
-    border: 1px solid rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     transition: var(--transition);
 }
 
 .contact-form:hover {
     box-shadow: var(--shadow-hover);
+    border-color: rgba(212, 175, 55, 0.4);
 }
 
 .contact-form h3 {
     margin-bottom: 25px;
-    color: var(--secondary-color);
+    color: var(--primary-color);
     text-align: center;
     font-size: 24px;
-    font-weight: 600;
+    font-weight: 500;
+    font-family: var(--font-secondary);
+    letter-spacing: 0.5px;
 }
 
 .form-group {
@@ -767,12 +797,14 @@ nav ul li a.active {
     width: 100%;
     padding: 15px 18px;
     border: 1px solid var(--border-color);
-    border-radius: var(--border-radius-sm);
+    border-radius: 0;
     font-family: var(--font-primary);
-    font-size: 16px;
+    font-size: 15px;
     transition: var(--transition);
-    background-color: #fafafa;
-    box-shadow: inset 0 1px 3px rgba(15, 30, 61, 0.05);
+    background-color: rgba(30, 30, 30, 0.8);
+    color: var(--text-color);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    letter-spacing: 0.3px;
 }
 
 .form-group input:focus,
@@ -780,7 +812,8 @@ nav ul li a.active {
 .form-group textarea:focus {
     border-color: var(--primary-color);
     outline: none;
-    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+    box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.2);
+    background-color: rgba(30, 30, 30, 1);
 }
 
 .contact-form .btn {
@@ -792,11 +825,11 @@ nav ul li a.active {
 
 /* Footer */
 footer {
-    background-color: var(--secondary-color);
+    background-color: var(--dark-color);
     color: white;
     padding: 80px 0 20px;
     position: relative;
-    background-image: linear-gradient(to bottom, rgba(15, 30, 61, 0.97), rgba(15, 30, 61, 1)), url('../images/hero-background.png');
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.97), rgba(0, 0, 0, 1)), url('../images/hero-background.png');
     background-size: cover;
     background-position: center;
     background-blend-mode: overlay;
@@ -808,8 +841,8 @@ footer::before {
     top: 0;
     left: 0;
     width: 100%;
-    height: 5px;
-    background: linear-gradient(to right, var(--primary-color), #B8860B);
+    height: 1px;
+    background: linear-gradient(to right, rgba(212, 175, 55, 0), rgba(212, 175, 55, 1), rgba(212, 175, 55, 0));
 }
 
 .footer-content {
@@ -838,10 +871,10 @@ footer::before {
     position: relative;
     padding-bottom: 12px;
     font-size: 20px;
-    font-weight: 600;
-    color: white;
+    font-weight: 500;
+    color: var(--primary-color);
     font-family: var(--font-secondary);
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
 }
 
 .footer-links h3::after,
@@ -850,10 +883,11 @@ footer::before {
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 40px;
-    height: 3px;
+    width: 30px;
+    height: 1px;
     background-color: var(--accent-color);
-    border-radius: 2px;
+    border-radius: 0;
+    box-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
 }
 
 .footer-links ul li {
@@ -897,10 +931,10 @@ footer::before {
     justify-content: center;
     width: 42px;
     height: 42px;
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(212, 175, 55, 0.3);
-    border-radius: 50%;
-    color: white;
+    border-radius: 0;
+    color: var(--text-color);
     transition: all 0.4s ease;
     font-size: 16px;
     position: relative;
@@ -908,9 +942,9 @@ footer::before {
 }
 
 .social-icons a:hover {
-    background-color: transparent;
+    background-color: rgba(212, 175, 55, 0.1);
     transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     border-color: var(--primary-color);
     color: var(--primary-color);
 }
