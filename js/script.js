@@ -61,168 +61,170 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Hero section video handling with sequential looping
-    const setupHeroVideos = function() {
-        const video1 = document.getElementById('hero-video-1');
-        const video2 = document.getElementById('hero-video-2');
-        const video3 = document.getElementById('hero-video-3');
-        const video2Container = document.getElementById('hero-video-2-container');
-        const video3Container = document.getElementById('hero-video-3-container');
+    // Hero section video handling - optimized for performance
+    const setupHeroVideo = function() {
+        const heroVideo = document.getElementById('hero-video');
 
-        if (!video1 || !video2 || !video3) return; // Exit if any of the videos don't exist
+        if (!heroVideo) return; // Exit if the video doesn't exist
 
-        // Track current active video (1, 2, or 3)
-        let currentVideo = 1;
-        let videosLoaded = [false, false, false]; // Track which videos have been fully loaded
+        // Video name for tracking
+        const videoName = 'output_web_optimized';
 
-        // Video names for tracking
-        const videoNames = [
-            'Airport_Transportation_Video_Plan',
-            'Airport_Services_Video_Creation_Request',
-            'Video_Prompt_for_Airport_Services'
-        ];
+        // Add error handling for the video
+        heroVideo.addEventListener('error', function(e) {
+            console.error('Video error:', heroVideo.id, e);
+            // Show poster image as fallback
+            heroVideo.poster = "info/Screenshot 2568-07-04 at 23.59.21.png";
+        });
 
-        // Function to switch to the next video in sequence
-        const playNextVideo = function() {
-            console.log('Playing next video. Current video:', currentVideo);
+        // Function to play the hero video
+        const playHeroVideo = function() {
+            // Only play if video is visible and not already playing
+            if (heroVideo.paused) {
+                console.log('Playing hero video');
 
-            // Determine next video to show - cycle through all three videos
-            const nextVideo = currentVideo === 1 ? 2 : (currentVideo === 2 ? 3 : 1);
-            console.log('Next video to play:', nextVideo);
-
-            // Hide all video containers
-            video1.parentElement.classList.add('hidden');
-            video2Container.classList.add('hidden');
-            video3Container.classList.add('hidden');
-
-            // Update current video
-            currentVideo = nextVideo;
-
-            // Show and play the next video
-            if (currentVideo === 1) {
-                video1.parentElement.classList.remove('hidden');
-                video1.currentTime = 0;
-                video1.play().catch(e => console.log('Video play error:', e));
-            } else if (currentVideo === 2) {
-                video2Container.classList.remove('hidden');
-                video2.currentTime = 0;
-                video2.play().catch(e => console.log('Video play error:', e));
-            } else { // currentVideo === 3
-                video3Container.classList.remove('hidden');
-                video3.currentTime = 0;
-                video3.play().catch(e => console.log('Video play error:', e));
-            }
-
-            // Track video switch event
-            if (typeof trackEvent === 'function') {
-                trackEvent('hero_video_switch', {
-                    video_number: currentVideo,
-                    video_name: videoNames[currentVideo - 1]
+                // Play the video with error handling
+                heroVideo.play().catch(e => {
+                    console.error('Error playing hero video:', e);
                 });
+
+                // Track video play event
+                if (typeof trackEvent === 'function') {
+                    trackEvent('hero_video_play', {
+                        video_name: videoName
+                    });
+                }
             }
         };
 
-        // Add event listeners to detect when each video ends and play the next one
-        video1.addEventListener('ended', function() {
-            // Explicitly play the second video (Airport_Services_Video_Creation_Request.mp4) after the first one
-            console.log('First video ended, playing second video');
+        // Check network connection and adjust video loading strategy
+        const checkNetworkAndLoadVideo = () => {
+            // Check if the Network Information API is available
+            if ('connection' in navigator) {
+                const connection = navigator.connection;
 
-            // Hide all video containers
-            video1.parentElement.classList.add('hidden');
-            video2Container.classList.remove('hidden');
-            video3Container.classList.add('hidden');
+                // Get connection type and effective type
+                const connectionType = connection.type;
+                const effectiveType = connection.effectiveType;
 
-            // Update current video
-            currentVideo = 2;
+                console.log(`Network connection: ${connectionType}, effective type: ${effectiveType}`);
 
-            // Play the second video
-            video2.currentTime = 0;
-            video2.play().catch(e => console.log('Video play error:', e));
+                // For slow connections, don't autoplay video to save data
+                if (connectionType === 'cellular' || 
+                    effectiveType === 'slow-2g' || 
+                    effectiveType === '2g' || 
+                    effectiveType === '3g') {
 
-            // Track video switch event
-            if (typeof trackEvent === 'function') {
-                trackEvent('hero_video_switch', {
-                    video_number: 2,
-                    video_name: videoNames[1]
-                });
+                    console.log('Slow connection detected, disabling video autoplay');
+                    return false;
+                }
             }
-        });
-        video2.addEventListener('ended', playNextVideo);
-        video3.addEventListener('ended', playNextVideo);
 
-        // Add error handling for all videos
-        [video1, video2, video3].forEach((video, index) => {
-            video.addEventListener('error', function(e) {
-                console.error('Video error:', video.id, e);
-                // If a video errors, try to play the next one
-                playNextVideo();
-            });
+            // Check if we're on a device that should autoplay video
+            return !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) || 
+                   (window.matchMedia('(min-width: 768px)').matches);
+        };
 
-            // Add loadeddata event listener to track when each video is fully loaded
-            video.addEventListener('loadeddata', function() {
-                console.log(`Video ${index + 1} (${videoNames[index]}) loaded successfully`);
-                videosLoaded[index] = true;
+        // Use Intersection Observer to load and play video only when visible
+        const videoObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                // When video is visible in the viewport
+                if (entry.isIntersecting) {
+                    // Check network and device capabilities
+                    const shouldAutoplay = checkNetworkAndLoadVideo();
 
-                // Check if all videos are loaded
-                if (videosLoaded.every(loaded => loaded)) {
-                    console.log('All videos are preloaded and ready for playback');
-                    startVideoSequence();
+                    // For mobile devices or slow connections, we'll keep preload as metadata to save data
+                    // For desktop with good connection, we'll load the video when it's visible
+                    if (shouldAutoplay) {
+                        // Start loading the video
+                        heroVideo.load();
+
+                        // Add loadeddata event listener to play when loaded
+                        heroVideo.addEventListener('loadeddata', function onceLoaded() {
+                            console.log(`Video (${videoName}) loaded successfully`);
+                            playHeroVideo();
+                            // Remove the event listener to prevent multiple calls
+                            heroVideo.removeEventListener('loadeddata', onceLoaded);
+                        });
+                    }
+
+                    // Stop observing once we've started loading
+                    videoObserver.unobserve(heroVideo);
                 }
             });
+        }, {
+            root: null, // viewport
+            threshold: 0.1 // 10% of the video is visible
         });
 
-        // Function to start the video sequence once all videos are loaded
-        const startVideoSequence = function() {
-            console.log('Starting video sequence');
-            // Show the first video and start playing
-            video1.parentElement.classList.remove('hidden');
-            video2Container.classList.add('hidden');
-            video3Container.classList.add('hidden');
+        // Track user engagement to determine when to load the video
+        let userHasEngaged = false;
 
-            // Start with the first video
-            currentVideo = 1;
-            video1.play().catch(e => {
-                console.error('Error playing first video:', e);
-                // If first video fails, try the next one
-                playNextVideo();
-            });
+        // Function to handle user engagement
+        const handleUserEngagement = () => {
+            if (!userHasEngaged) {
+                userHasEngaged = true;
+                console.log('User has engaged with the site, starting video observation');
 
-            console.log('First video playback started');
+                // Start observing the video element once user has engaged
+                videoObserver.observe(heroVideo);
+
+                // Remove the engagement listeners once triggered
+                window.removeEventListener('scroll', handleUserEngagement);
+                document.removeEventListener('click', handleUserEngagement);
+                document.removeEventListener('keydown', handleUserEngagement);
+            }
         };
 
-        // Preload all videos when the page loads
+        // Listen for user engagement events
+        window.addEventListener('scroll', handleUserEngagement);
+        document.addEventListener('click', handleUserEngagement);
+        document.addEventListener('keydown', handleUserEngagement);
+
+        // Set a timeout to load the video anyway after a delay if no engagement
+        // This ensures the video will eventually load even without interaction
+        setTimeout(() => {
+            if (!userHasEngaged) {
+                console.log('Loading video after timeout without user engagement');
+                handleUserEngagement();
+            }
+        }, 3000); // 3 second delay
+
+        // Also handle video loading on page load for browsers that don't support IntersectionObserver
         window.addEventListener('load', function() {
-            console.log('Page loaded, preloading all videos...');
+            // If IntersectionObserver is not supported
+            if (!('IntersectionObserver' in window)) {
+                console.log('Page loaded, loading hero video (fallback method)...');
 
-            // Force preload of all videos to ensure they're ready
-            [video1, video2, video3].forEach((video, index) => {
-                // Ensure preload attribute is set to auto
-                if (video.preload !== 'auto') {
-                    video.preload = 'auto';
+                // Check if the video is in the viewport
+                const rect = heroVideo.getBoundingClientRect();
+                const isInViewport = (
+                    rect.top >= 0 &&
+                    rect.left >= 0 &&
+                    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+                );
+
+                if (isInViewport) {
+                    // Wait for user engagement or timeout before loading
+                    if (userHasEngaged) {
+                        // If the video is already loaded, play it
+                        if (heroVideo.readyState >= 3) { // HAVE_FUTURE_DATA or higher
+                            console.log('Hero video already loaded, starting playback');
+                            playHeroVideo();
+                        } else {
+                            // Otherwise load it first
+                            heroVideo.load();
+                            heroVideo.addEventListener('loadeddata', playHeroVideo);
+                        }
+                    }
                 }
-
-                // Force load the video
-                video.load();
-
-                // If the video is already loaded, mark it as loaded
-                if (video.readyState >= 3) { // HAVE_FUTURE_DATA or higher
-                    console.log(`Video ${index + 1} already loaded`);
-                    videosLoaded[index] = true;
-                }
-            });
-
-            // Check if all videos are already loaded
-            if (videosLoaded.every(loaded => loaded)) {
-                console.log('All videos already loaded, starting playback');
-                startVideoSequence();
-            } else {
-                console.log('Waiting for all videos to load before starting playback');
             }
         });
     };
 
-    // Initialize hero videos
-    setupHeroVideos();
+    // Initialize hero video
+    setupHeroVideo();
 
     // DOM Elements
     const nav = document.querySelector('nav');
