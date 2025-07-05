@@ -69,11 +69,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const video2Container = document.getElementById('hero-video-2-container');
         const video3Container = document.getElementById('hero-video-3-container');
 
-        if (!video1 || !video2 || !video3) return; // Exit if videos don't exist
+        if (!video1 || !video2) return; // Exit if videos 1 or 2 don't exist
 
-        // Track current active video (1, 2, or 3)
+        // Track current active video (1 or 2)
         let currentVideo = 1;
-        let videosInitialized = [true, false, false]; // Track which videos have been initialized
+        let videosInitialized = [true, false]; // Track which videos have been initialized
 
         // Function to initialize a video that hasn't been loaded yet
         const initializeVideo = function(videoElement) {
@@ -97,8 +97,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const switchVideos = function() {
             console.log('Switching videos. Current video:', currentVideo);
 
-            // Determine next video to show
-            const nextVideo = (currentVideo % 3) + 1; // Cycle through 1, 2, 3
+            // Determine next video to show - only cycle between videos 1 and 2
+            const nextVideo = currentVideo === 1 ? 2 : 1; // Cycle only through 1 and 2
             console.log('Next video to play:', nextVideo);
 
             // Initialize the next video if needed
@@ -120,23 +120,18 @@ document.addEventListener('DOMContentLoaded', function() {
             // Update current video
             currentVideo = nextVideo;
 
-            // Show and play the next video
+            // Show and play the next video (only videos 1 and 2)
             let videoName = '';
             if (currentVideo === 1) {
                 video1.parentElement.classList.remove('hidden');
                 video1.currentTime = 0;
                 video1.play().catch(e => console.log('Video play error:', e));
                 videoName = 'Airport_Services_Video';
-            } else if (currentVideo === 2) {
+            } else { // currentVideo === 2
                 video2Container.classList.remove('hidden');
                 video2.currentTime = 0;
                 video2.play().catch(e => console.log('Video play error:', e));
                 videoName = 'Airport_Transportation_Video';
-            } else { // currentVideo === 3
-                video3Container.classList.remove('hidden');
-                video3.currentTime = 0;
-                video3.play().catch(e => console.log('Video play error:', e));
-                videoName = 'Video_Prompt_for_Airport_Services';
             }
 
             // Track video switch event
@@ -148,30 +143,25 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         };
 
-        // Listen for the end of each video
+        // Listen for the end of videos 1 and 2 to create a loop
         video1.addEventListener('ended', function() {
             console.log('Video 1 ended, switching to video 2');
             switchVideos();
         });
 
         video2.addEventListener('ended', function() {
-            console.log('Video 2 ended, switching to video 3');
+            console.log('Video 2 ended, switching back to video 1');
             switchVideos();
         });
 
-        video3.addEventListener('ended', function() {
-            console.log('Video 3 ended, switching back to video 1');
-            switchVideos();
-        });
-
-        // Add error handling for videos
-        [video1, video2, video3].forEach(video => {
+        // Add error handling for videos 1 and 2
+        [video1, video2].forEach(video => {
             video.addEventListener('error', function(e) {
                 console.error('Video error:', video.id, e);
             });
         });
 
-        // Preload all videos after the page has loaded
+        // Preload videos 1 and 2 after the page has loaded
         window.addEventListener('load', function() {
             // Initialize video 1 (already loaded)
             console.log('Video 1 is ready to play');
@@ -182,12 +172,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 video1.load();
             }
 
-            // Initialize video 2 and 3 immediately
+            // Initialize video 2 immediately
             videosInitialized[1] = initializeVideo(video2);
             console.log('Preloaded second video');
-
-            videosInitialized[2] = initializeVideo(video3);
-            console.log('Preloaded third video');
 
             // Make sure video1 has an ended event by forcing a check
             if (video1.readyState >= 2) {
@@ -199,8 +186,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
 
-            // Force preload of all videos to ensure they're ready
-            [video1, video2, video3].forEach(video => {
+            // Force preload of videos 1 and 2 to ensure they're ready
+            [video1, video2].forEach(video => {
                 if (video.preload !== 'auto') {
                     video.preload = 'auto';
                 }
