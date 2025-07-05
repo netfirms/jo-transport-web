@@ -1,4 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // CHANGELOG:
+    // - Added translation completeness checking functionality
+    //   This checks if all translation keys have values for all supported languages (en, th, zh, ar)
+    //   and provides detailed feedback in the console and a visual warning in development environments.
+    //   The check runs automatically on page load.
+
     // Initialize EmailJS
     // To set up EmailJS:
     // 1. Create an account at https://www.emailjs.com/
@@ -620,6 +626,113 @@ document.addEventListener('DOMContentLoaded', function() {
         // Set initial value
         languageSelector.value = currentLanguage;
     }
+
+    // Function to check if all translations are complete
+    function checkTranslationsComplete() {
+        const supportedLanguages = ['en', 'th', 'zh', 'ar', 'ja', 'ko', 'ms', 'ru'];
+        const missingTranslations = [];
+        const languageCounts = {
+            en: 0,
+            th: 0,
+            zh: 0,
+            ar: 0,
+            ja: 0,
+            ko: 0,
+            ms: 0,
+            ru: 0
+        };
+        let totalTranslationKeys = 0;
+
+        // Recursive function to check translations
+        function checkTranslationObject(obj, path = '') {
+            for (const key in obj) {
+                const currentPath = path ? `${path}.${key}` : key;
+
+                // If this is a translation entry (has language keys)
+                if (typeof obj[key] === 'object' && (obj[key].en !== undefined || obj[key].th !== undefined || obj[key].zh !== undefined || obj[key].ar !== undefined)) {
+                    totalTranslationKeys++;
+
+                    // Check if all languages are present
+                    for (const lang of supportedLanguages) {
+                        if (obj[key][lang] === undefined) {
+                            missingTranslations.push({
+                                path: currentPath,
+                                language: lang
+                            });
+                        } else {
+                            languageCounts[lang]++;
+                        }
+                    }
+                } 
+                // If this is a nested object, recurse into it
+                else if (typeof obj[key] === 'object' && key !== 'languageNames') {
+                    checkTranslationObject(obj[key], currentPath);
+                }
+            }
+        }
+
+        // Start the recursive check
+        checkTranslationObject(translations);
+
+        // Calculate completion percentages
+        const completionStats = {};
+        for (const lang of supportedLanguages) {
+            completionStats[lang] = {
+                count: languageCounts[lang],
+                total: totalTranslationKeys,
+                percentage: Math.round((languageCounts[lang] / totalTranslationKeys) * 100)
+            };
+        }
+
+        // Log results
+        if (missingTranslations.length > 0) {
+            console.group('%c⚠️ TRANSLATION CHECK: Incomplete Translations', 'color: #ff9800; font-size: 14px; font-weight: bold;');
+            console.log('%cMissing translations found:', 'color: #ff5722; font-weight: bold;');
+            console.table(missingTranslations);
+            console.log('%cTranslation completion statistics:', 'color: #2196f3; font-weight: bold;');
+            console.table(completionStats);
+            console.groupEnd();
+
+            // Show warning in development environment
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                const warningDiv = document.createElement('div');
+                warningDiv.style.position = 'fixed';
+                warningDiv.style.bottom = '10px';
+                warningDiv.style.right = '10px';
+                warningDiv.style.backgroundColor = '#ff9800';
+                warningDiv.style.color = 'white';
+                warningDiv.style.padding = '10px 15px';
+                warningDiv.style.borderRadius = '5px';
+                warningDiv.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+                warningDiv.style.zIndex = '9999';
+                warningDiv.style.fontSize = '14px';
+                warningDiv.style.fontWeight = 'bold';
+                warningDiv.innerHTML = `⚠️ Warning: ${missingTranslations.length} missing translations. Check console for details.`;
+
+                // Add a close button
+                const closeBtn = document.createElement('span');
+                closeBtn.innerHTML = '&times;';
+                closeBtn.style.marginLeft = '10px';
+                closeBtn.style.cursor = 'pointer';
+                closeBtn.onclick = function() { warningDiv.remove(); };
+                warningDiv.appendChild(closeBtn);
+
+                document.body.appendChild(warningDiv);
+            }
+
+            return false;
+        } else {
+            console.group('%c✅ TRANSLATION CHECK: All Translations Complete', 'color: #4caf50; font-size: 14px; font-weight: bold;');
+            console.log('%cAll translations are complete!', 'color: #4caf50; font-weight: bold;');
+            console.log('%cTranslation statistics:', 'color: #2196f3; font-weight: bold;');
+            console.table(completionStats);
+            console.groupEnd();
+            return true;
+        }
+    }
+
+    // Check if all translations are complete
+    const translationsComplete = checkTranslationsComplete();
 
     // Initialize language with saved preference or default
     changeLanguage(currentLanguage);

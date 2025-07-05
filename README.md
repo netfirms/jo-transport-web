@@ -204,6 +204,23 @@ The following events are automatically tracked:
 
 You can add custom event tracking using the `trackEvent()` function. See the [Firebase Setup Guide](FIREBASE_SETUP.md) for examples.
 
+## Testing
+
+The website includes a comprehensive test suite using Jest for unit testing and Cypress for E2E testing. For detailed information on running tests and what they cover, see the [Testing Documentation](tests/README.md).
+
+### Running Tests
+
+```bash
+# Install dependencies
+npm install
+
+# Run unit tests
+npm test
+
+# Run E2E tests (requires local server running)
+npm run cypress:open
+```
+
 ## Contact
 
 For questions or issues regarding this website, please contact the repository owner.
