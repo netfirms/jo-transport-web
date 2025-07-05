@@ -73,25 +73,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Track current active video (1, 2, or 3)
         let currentVideo = 1;
-        let videosInitialized = [true, false, false]; // Track which videos have been initialized
+        let videosLoaded = [false, false, false]; // Track which videos have been fully loaded
 
-        // Function to initialize a video that hasn't been loaded yet
-        const initializeVideo = function(videoElement) {
-            const sourceElement = videoElement.querySelector('source');
-            if (sourceElement) {
-                // Make sure the video is loaded
-                videoElement.load(); // Important: need to call load() to ensure the video is ready
-
-                // Add a one-time event listener to confirm the video is loadable
-                videoElement.addEventListener('loadeddata', function onLoaded() {
-                    console.log('Video loaded successfully:', videoElement.id);
-                    videoElement.removeEventListener('loadeddata', onLoaded);
-                });
-
-                return true; // Video was initialized
-            }
-            return false; // Video initialization failed
-        };
+        // Video names for tracking
+        const videoNames = [
+            'Airport_Transportation_Video_Plan',
+            'Airport_Services_Video_Creation_Request',
+            'Video_Prompt_for_Airport_Services'
+        ];
 
         // Function to switch to the next video in sequence
         const playNextVideo = function() {
@@ -100,17 +89,6 @@ document.addEventListener('DOMContentLoaded', function() {
             // Determine next video to show - cycle through all three videos
             const nextVideo = currentVideo === 1 ? 2 : (currentVideo === 2 ? 3 : 1);
             console.log('Next video to play:', nextVideo);
-
-            // Initialize the next video if needed
-            if (!videosInitialized[nextVideo - 1]) {
-                if (nextVideo === 2) {
-                    videosInitialized[1] = initializeVideo(video2);
-                    console.log('Initialized video 2');
-                } else if (nextVideo === 3) {
-                    videosInitialized[2] = initializeVideo(video3);
-                    console.log('Initialized video 3');
-                }
-            }
 
             // Hide all video containers
             video1.parentElement.classList.add('hidden');
@@ -121,79 +99,125 @@ document.addEventListener('DOMContentLoaded', function() {
             currentVideo = nextVideo;
 
             // Show and play the next video
-            let videoName = '';
             if (currentVideo === 1) {
                 video1.parentElement.classList.remove('hidden');
                 video1.currentTime = 0;
                 video1.play().catch(e => console.log('Video play error:', e));
-                videoName = 'Airport_Transportation_Video_Plan';
             } else if (currentVideo === 2) {
                 video2Container.classList.remove('hidden');
                 video2.currentTime = 0;
                 video2.play().catch(e => console.log('Video play error:', e));
-                videoName = 'Airport_Services_Video_Creation_Request';
             } else { // currentVideo === 3
                 video3Container.classList.remove('hidden');
                 video3.currentTime = 0;
                 video3.play().catch(e => console.log('Video play error:', e));
-                videoName = 'Video_Prompt_for_Airport_Services';
             }
 
             // Track video switch event
             if (typeof trackEvent === 'function') {
                 trackEvent('hero_video_switch', {
                     video_number: currentVideo,
-                    video_name: videoName
+                    video_name: videoNames[currentVideo - 1]
                 });
             }
         };
 
         // Add event listeners to detect when each video ends and play the next one
-        video1.addEventListener('ended', playNextVideo);
+        video1.addEventListener('ended', function() {
+            // Explicitly play the second video (Airport_Services_Video_Creation_Request.mp4) after the first one
+            console.log('First video ended, playing second video');
+
+            // Hide all video containers
+            video1.parentElement.classList.add('hidden');
+            video2Container.classList.remove('hidden');
+            video3Container.classList.add('hidden');
+
+            // Update current video
+            currentVideo = 2;
+
+            // Play the second video
+            video2.currentTime = 0;
+            video2.play().catch(e => console.log('Video play error:', e));
+
+            // Track video switch event
+            if (typeof trackEvent === 'function') {
+                trackEvent('hero_video_switch', {
+                    video_number: 2,
+                    video_name: videoNames[1]
+                });
+            }
+        });
         video2.addEventListener('ended', playNextVideo);
         video3.addEventListener('ended', playNextVideo);
 
         // Add error handling for all videos
-        [video1, video2, video3].forEach(video => {
+        [video1, video2, video3].forEach((video, index) => {
             video.addEventListener('error', function(e) {
                 console.error('Video error:', video.id, e);
                 // If a video errors, try to play the next one
                 playNextVideo();
             });
+
+            // Add loadeddata event listener to track when each video is fully loaded
+            video.addEventListener('loadeddata', function() {
+                console.log(`Video ${index + 1} (${videoNames[index]}) loaded successfully`);
+                videosLoaded[index] = true;
+
+                // Check if all videos are loaded
+                if (videosLoaded.every(loaded => loaded)) {
+                    console.log('All videos are preloaded and ready for playback');
+                    startVideoSequence();
+                }
+            });
         });
 
-        // Preload all videos after the page has loaded
+        // Function to start the video sequence once all videos are loaded
+        const startVideoSequence = function() {
+            console.log('Starting video sequence');
+            // Show the first video and start playing
+            video1.parentElement.classList.remove('hidden');
+            video2Container.classList.add('hidden');
+            video3Container.classList.add('hidden');
+
+            // Start with the first video
+            currentVideo = 1;
+            video1.play().catch(e => {
+                console.error('Error playing first video:', e);
+                // If first video fails, try the next one
+                playNextVideo();
+            });
+
+            console.log('First video playback started');
+        };
+
+        // Preload all videos when the page loads
         window.addEventListener('load', function() {
-            // Initialize video 1 (already loaded)
-            console.log('Video 1 is ready to play');
-
-            // Make sure video1 is properly loaded
-            if (video1.readyState < 2) {
-                console.log('Ensuring video 1 is loaded...');
-                video1.load();
-            }
-
-            // Initialize videos 2 and 3 immediately
-            videosInitialized[1] = initializeVideo(video2);
-            videosInitialized[2] = initializeVideo(video3);
-            console.log('Preloaded second and third videos');
-
-            // Make sure video1 has an ended event by forcing a check
-            if (video1.readyState >= 2) {
-                console.log('Video 1 is loaded and ready to play');
-            } else {
-                console.log('Waiting for video 1 to load...');
-                video1.addEventListener('loadeddata', function() {
-                    console.log('Video 1 loaded data event fired');
-                });
-            }
+            console.log('Page loaded, preloading all videos...');
 
             // Force preload of all videos to ensure they're ready
-            [video1, video2, video3].forEach(video => {
+            [video1, video2, video3].forEach((video, index) => {
+                // Ensure preload attribute is set to auto
                 if (video.preload !== 'auto') {
                     video.preload = 'auto';
                 }
+
+                // Force load the video
+                video.load();
+
+                // If the video is already loaded, mark it as loaded
+                if (video.readyState >= 3) { // HAVE_FUTURE_DATA or higher
+                    console.log(`Video ${index + 1} already loaded`);
+                    videosLoaded[index] = true;
+                }
             });
+
+            // Check if all videos are already loaded
+            if (videosLoaded.every(loaded => loaded)) {
+                console.log('All videos already loaded, starting playback');
+                startVideoSequence();
+            } else {
+                console.log('Waiting for all videos to load before starting playback');
+            }
         });
     };
 
