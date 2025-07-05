@@ -11,6 +11,46 @@ document.addEventListener('DOMContentLoaded', function() {
         emailjs.init("44SbPdv3lcp7pJ3VE");
     })();
 
+    // Add event tracking for fleet vehicle cards
+    document.querySelectorAll('#fleet .grid > div').forEach(card => {
+        card.addEventListener('click', function() {
+            const vehicleName = this.querySelector('h3').textContent;
+            const vehicleType = this.querySelector('.absolute').textContent;
+
+            if (typeof trackEvent === 'function') {
+                trackEvent('fleet_card_click', {
+                    vehicle_name: vehicleName,
+                    vehicle_type: vehicleType
+                });
+            }
+        });
+    });
+
+    // Track "Learn More" button clicks in services section
+    document.querySelectorAll('#services a[href="services.html"]').forEach(link => {
+        link.addEventListener('click', function() {
+            const serviceTitle = this.closest('.flex-col').querySelector('h3').textContent;
+
+            if (typeof trackEvent === 'function') {
+                trackEvent('learn_more_click', {
+                    service_name: serviceTitle
+                });
+            }
+        });
+    });
+
+    // Track "Get a Quote" button click in hero section
+    const quoteButton = document.querySelector('.hero a[href="#contact"]');
+    if (quoteButton) {
+        quoteButton.addEventListener('click', function() {
+            if (typeof trackEvent === 'function') {
+                trackEvent('get_quote_click', {
+                    location: 'hero_section'
+                });
+            }
+        });
+    }
+
     // Hero section video handling
     const setupHeroVideos = function() {
         const video1 = document.getElementById('hero-video-1');
@@ -33,18 +73,30 @@ document.addEventListener('DOMContentLoaded', function() {
             currentVideo = (currentVideo % 3) + 1; // Cycle through 1, 2, 3
 
             // Show and play the next video
+            let videoName = '';
             if (currentVideo === 1) {
                 video1.classList.remove('hidden');
                 video1.currentTime = 0;
                 video1.play();
+                videoName = 'Airport_Services_Video';
             } else if (currentVideo === 2) {
                 video2.classList.remove('hidden');
                 video2.currentTime = 0;
                 video2.play();
+                videoName = 'Airport_Transportation_Video';
             } else { // currentVideo === 3
                 video3.classList.remove('hidden');
                 video3.currentTime = 0;
                 video3.play();
+                videoName = 'Video_Prompt_for_Airport_Services';
+            }
+
+            // Track video switch event
+            if (typeof trackEvent === 'function') {
+                trackEvent('hero_video_switch', {
+                    video_number: currentVideo,
+                    video_name: videoName
+                });
             }
         };
 
@@ -71,7 +123,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mobile Menu Toggle
     if (mobileMenuBtn) {
         mobileMenuBtn.addEventListener('click', function() {
-            nav.style.display = nav.style.display === 'block' ? 'none' : 'block';
+            const isOpening = nav.style.display !== 'block';
+            nav.style.display = isOpening ? 'block' : 'none';
+
+            // Track mobile menu toggle event
+            if (typeof trackEvent === 'function') {
+                trackEvent('mobile_menu_toggle', {
+                    action: isOpening ? 'open' : 'close'
+                });
+            }
 
             // Add mobile-specific styles when menu is open
             if (nav.style.display === 'block') {
@@ -136,6 +196,14 @@ document.addEventListener('DOMContentLoaded', function() {
             const targetId = this.getAttribute('href');
             if (targetId === '#') return;
 
+            // Track navigation click event
+            if (typeof trackEvent === 'function') {
+                trackEvent('navigation_click', {
+                    target_section: targetId.replace('#', ''),
+                    link_text: this.textContent.trim()
+                });
+            }
+
             const targetElement = document.querySelector(targetId);
             if (targetElement) {
                 window.scrollTo({
@@ -177,6 +245,15 @@ document.addEventListener('DOMContentLoaded', function() {
             const originalButtonText = submitButton.textContent;
             submitButton.disabled = true;
             submitButton.textContent = translations.contact.form.sending[currentLanguage];
+
+            // Track form submission event
+            if (typeof trackEvent === 'function') {
+                trackEvent('quote_form_submit', {
+                    form_id: 'quote-form',
+                    form_name: 'Request a Quote',
+                    service_type: serviceText
+                });
+            }
 
             // Prepare template parameters for EmailJS
             // These parameter names should match the template variables in your EmailJS template
@@ -306,6 +383,13 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.classList.remove('rtl');
         }
 
+        // Track language change event
+        if (typeof trackEvent === 'function') {
+            trackEvent('language_change', {
+                language: lang
+            });
+        }
+
         // Update all translatable elements
         updatePageContent();
     }
@@ -366,4 +450,62 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize language with saved preference or default
     changeLanguage(currentLanguage);
+
+    // Track social media link clicks
+    document.querySelectorAll('footer .flex.gap-4 a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            const socialPlatform = this.querySelector('i').className.replace('fab fa-', '').replace('-f', '').replace('-in', '');
+
+            if (typeof trackEvent === 'function') {
+                trackEvent('social_media_click', {
+                    platform: socialPlatform
+                });
+            }
+        });
+    });
+
+    // Track service selection in the contact form
+    const serviceSelect = document.getElementById('service');
+    if (serviceSelect) {
+        serviceSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            if (selectedOption.value && selectedOption.value !== '' && typeof trackEvent === 'function') {
+                trackEvent('service_selection', {
+                    service_type: selectedOption.value,
+                    service_name: selectedOption.textContent
+                });
+            }
+        });
+    }
+
+    // Track contact information link clicks
+    const contactLinks = {
+        'tel:': 'phone_call',
+        'mailto:': 'email_click',
+        'line.me': 'line_click',
+        'wa.me': 'whatsapp_click'
+    };
+
+    document.querySelectorAll('#contact a[href]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            let eventType = null;
+            let contactMethod = null;
+
+            for (const [prefix, event] of Object.entries(contactLinks)) {
+                if (href.includes(prefix)) {
+                    eventType = event;
+                    contactMethod = href.replace(prefix, '');
+                    break;
+                }
+            }
+
+            if (eventType && typeof trackEvent === 'function') {
+                trackEvent('contact_method_click', {
+                    method: eventType,
+                    value: contactMethod
+                });
+            }
+        });
+    });
 });

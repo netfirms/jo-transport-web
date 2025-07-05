@@ -51,10 +51,14 @@ To work on this website locally:
 - `index.html` - Main page of the website
 - `services.html` - Services details page
 - `js/` - Contains JavaScript files
+  - `script.js` - Main JavaScript functionality
+  - `translations.js` - Multilingual support
+  - `firebase-init.js` - Firebase and Google Analytics initialization
 - `images/` - Contains image assets
 - `info/` - Contains additional images and information
 - `.github/workflows/deploy.yml` - GitHub Actions workflow for deployment
 - `.nojekyll` - Prevents GitHub Pages from processing the site with Jekyll
+- `FIREBASE_SETUP.md` - Guide for setting up Firebase Google Analytics
 
 ## CSS Implementation
 
@@ -99,6 +103,8 @@ npx tailwindcss -i ./src/input.css -o ./dist/output.css --watch
 
 ## Implementation Summary
 
+### GitHub Pages Deployment
+
 The following files have been added to enable GitHub Pages deployment:
 
 1. `.github/workflows/deploy.yml` - A GitHub Actions workflow that automatically deploys the website to GitHub Pages when changes are pushed to the main branch or when manually triggered.
@@ -111,6 +117,20 @@ To use this deployment setup:
 2. Go to your repository's Settings > Pages
 3. Under "Source", select "GitHub Actions"
 4. Your site will automatically deploy when you push changes to the main branch
+
+### Firebase Google Analytics
+
+The following files have been added to enable Firebase Google Analytics:
+
+1. `js/firebase-init.js` - Initializes Firebase and Google Analytics, and sets up event tracking.
+2. Firebase SDK scripts added to `index.html` and `services.html`.
+3. `FIREBASE_SETUP.md` - A guide that provides detailed instructions for setting up Firebase Google Analytics.
+
+To use Firebase Analytics:
+
+1. Follow the instructions in the [Firebase Setup Guide](FIREBASE_SETUP.md)
+2. Update the configuration in `js/firebase-init.js` with your Firebase project details
+3. Deploy your website to start collecting analytics data
 
 ## Email Service Integration
 
@@ -161,6 +181,28 @@ These settings help address the following issues:
 - **shrink-to-fit=no**: Prevents iOS from automatically scaling down content to fit the viewport
 
 This configuration was implemented to fix page size differences between local development environments and GitHub Pages deployment.
+
+## Firebase Google Analytics Integration
+
+The website is integrated with Firebase Google Analytics to track user interactions and gather insights about website usage. To set up Firebase Google Analytics:
+
+1. Create a Firebase project
+2. Register your web app
+3. Update the configuration in `js/firebase-init.js`
+4. Deploy your website
+
+For detailed instructions, see the [Firebase Setup Guide](FIREBASE_SETUP.md).
+
+### Tracked Events
+
+The following events are automatically tracked:
+
+- **Page Views**: When users visit any page
+- **Outbound Link Clicks**: When users click on links to external websites
+- **Form Submissions**: When users submit the quote request form
+- **Service Card Clicks**: When users click on service cards
+
+You can add custom event tracking using the `trackEvent()` function. See the [Firebase Setup Guide](FIREBASE_SETUP.md) for examples.
 
 ## Contact
 
