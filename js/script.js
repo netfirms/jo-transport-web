@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Hero section video handling with lazy loading
+    // Hero section video handling with sequential looping
     const setupHeroVideos = function() {
         const video1 = document.getElementById('hero-video-1');
         const video2 = document.getElementById('hero-video-2');
@@ -69,11 +69,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const video2Container = document.getElementById('hero-video-2-container');
         const video3Container = document.getElementById('hero-video-3-container');
 
-        if (!video1 || !video2) return; // Exit if videos 1 or 2 don't exist
+        if (!video1 || !video2 || !video3) return; // Exit if any of the videos don't exist
 
-        // Track current active video (1 or 2)
+        // Track current active video (1, 2, or 3)
         let currentVideo = 1;
-        let videosInitialized = [true, false]; // Track which videos have been initialized
+        let videosInitialized = [true, false, false]; // Track which videos have been initialized
 
         // Function to initialize a video that hasn't been loaded yet
         const initializeVideo = function(videoElement) {
@@ -93,12 +93,12 @@ document.addEventListener('DOMContentLoaded', function() {
             return false; // Video initialization failed
         };
 
-        // Function to switch between videos
-        const switchVideos = function() {
-            console.log('Switching videos. Current video:', currentVideo);
+        // Function to switch to the next video in sequence
+        const playNextVideo = function() {
+            console.log('Playing next video. Current video:', currentVideo);
 
-            // Determine next video to show - only cycle between videos 1 and 2
-            const nextVideo = currentVideo === 1 ? 2 : 1; // Cycle only through 1 and 2
+            // Determine next video to show - cycle through all three videos
+            const nextVideo = currentVideo === 1 ? 2 : (currentVideo === 2 ? 3 : 1);
             console.log('Next video to play:', nextVideo);
 
             // Initialize the next video if needed
@@ -120,18 +120,23 @@ document.addEventListener('DOMContentLoaded', function() {
             // Update current video
             currentVideo = nextVideo;
 
-            // Show and play the next video (only videos 1 and 2)
+            // Show and play the next video
             let videoName = '';
             if (currentVideo === 1) {
                 video1.parentElement.classList.remove('hidden');
                 video1.currentTime = 0;
                 video1.play().catch(e => console.log('Video play error:', e));
-                videoName = 'Airport_Services_Video';
-            } else { // currentVideo === 2
+                videoName = 'Airport_Transportation_Video_Plan';
+            } else if (currentVideo === 2) {
                 video2Container.classList.remove('hidden');
                 video2.currentTime = 0;
                 video2.play().catch(e => console.log('Video play error:', e));
-                videoName = 'Airport_Transportation_Video';
+                videoName = 'Airport_Services_Video_Creation_Request';
+            } else { // currentVideo === 3
+                video3Container.classList.remove('hidden');
+                video3.currentTime = 0;
+                video3.play().catch(e => console.log('Video play error:', e));
+                videoName = 'Video_Prompt_for_Airport_Services';
             }
 
             // Track video switch event
@@ -143,25 +148,21 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         };
 
-        // Listen for the end of videos 1 and 2 to create a loop
-        video1.addEventListener('ended', function() {
-            console.log('Video 1 ended, switching to video 2');
-            switchVideos();
-        });
+        // Add event listeners to detect when each video ends and play the next one
+        video1.addEventListener('ended', playNextVideo);
+        video2.addEventListener('ended', playNextVideo);
+        video3.addEventListener('ended', playNextVideo);
 
-        video2.addEventListener('ended', function() {
-            console.log('Video 2 ended, switching back to video 1');
-            switchVideos();
-        });
-
-        // Add error handling for videos 1 and 2
-        [video1, video2].forEach(video => {
+        // Add error handling for all videos
+        [video1, video2, video3].forEach(video => {
             video.addEventListener('error', function(e) {
                 console.error('Video error:', video.id, e);
+                // If a video errors, try to play the next one
+                playNextVideo();
             });
         });
 
-        // Preload videos 1 and 2 after the page has loaded
+        // Preload all videos after the page has loaded
         window.addEventListener('load', function() {
             // Initialize video 1 (already loaded)
             console.log('Video 1 is ready to play');
@@ -172,9 +173,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 video1.load();
             }
 
-            // Initialize video 2 immediately
+            // Initialize videos 2 and 3 immediately
             videosInitialized[1] = initializeVideo(video2);
-            console.log('Preloaded second video');
+            videosInitialized[2] = initializeVideo(video3);
+            console.log('Preloaded second and third videos');
 
             // Make sure video1 has an ended event by forcing a check
             if (video1.readyState >= 2) {
@@ -186,8 +188,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
 
-            // Force preload of videos 1 and 2 to ensure they're ready
-            [video1, video2].forEach(video => {
+            // Force preload of all videos to ensure they're ready
+            [video1, video2, video3].forEach(video => {
                 if (video.preload !== 'auto') {
                     video.preload = 'auto';
                 }
