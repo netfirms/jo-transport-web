@@ -50,12 +50,52 @@ To work on this website locally:
 
 - `index.html` - Main page of the website
 - `services.html` - Services details page
-- `css/` - Contains stylesheets
 - `js/` - Contains JavaScript files
 - `images/` - Contains image assets
 - `info/` - Contains additional images and information
 - `.github/workflows/deploy.yml` - GitHub Actions workflow for deployment
 - `.nojekyll` - Prevents GitHub Pages from processing the site with Jekyll
+
+## CSS Implementation
+
+This website uses Tailwind CSS for styling. Tailwind is a utility-first CSS framework that allows for rapid UI development with pre-defined utility classes.
+
+### Benefits of Tailwind CSS
+
+- **Faster Development**: Build custom designs without writing custom CSS
+- **Responsive Design**: Built-in responsive design utilities
+- **Consistency**: Predefined design system with consistent spacing, colors, etc.
+- **Smaller File Size**: Only includes the utilities you use (when properly configured)
+- **Easier Maintenance**: Changes can be made directly in HTML without modifying separate CSS files
+
+### Implementation Details
+
+- Tailwind CSS is included via CDN for simplicity
+- Custom configuration is included in the `<head>` section of `index.html`
+- Custom colors, fonts, shadows, and border radius values are defined to match the brand
+- Some custom CSS is still used for complex elements that can't be easily styled with utility classes
+
+### Future Development
+
+For production environments, consider:
+
+1. Setting up a build process with npm to optimize the CSS size
+2. Using PostCSS with Tailwind for additional features
+3. Extracting common patterns into reusable components
+
+To set up a build process:
+
+```bash
+# Install dependencies
+npm install -D tailwindcss postcss autoprefixer
+
+# Initialize Tailwind CSS
+npx tailwindcss init
+
+# Create a CSS file that imports Tailwind
+# Then build it with:
+npx tailwindcss -i ./src/input.css -o ./dist/output.css --watch
+```
 
 ## Implementation Summary
 
@@ -71,6 +111,39 @@ To use this deployment setup:
 2. Go to your repository's Settings > Pages
 3. Under "Source", select "GitHub Actions"
 4. Your site will automatically deploy when you push changes to the main branch
+
+## Email Service Integration
+
+The website includes a quote request form that sends emails using EmailJS. Here's how to set it up:
+
+### Setting Up EmailJS
+
+1. Create an account at [EmailJS](https://www.emailjs.com/)
+2. Create an Email Service (e.g., Gmail, Outlook, etc.) in your EmailJS dashboard
+3. Create an Email Template with the following template variables:
+   - `{{from_name}}` - The name of the person submitting the form
+   - `{{from_email}}` - The email address of the person submitting the form
+   - `{{from_phone}}` - The phone number of the person submitting the form
+   - `{{service_type}}` - The type of service requested
+   - `{{message}}` - Additional details provided in the form
+
+### Configuring the Website
+
+After setting up EmailJS, you need to update the following files:
+
+1. Open `js/script.js`
+2. Replace `YOUR_PUBLIC_KEY` with your actual EmailJS public key (around line 11)
+3. Replace `YOUR_SERVICE_ID` with your actual EmailJS service ID (around line 120)
+4. Replace `YOUR_TEMPLATE_ID` with your actual EmailJS template ID (around line 120)
+
+### Testing the Form
+
+After configuration:
+1. Open the website
+2. Fill out the quote request form
+3. Submit the form
+4. You should receive an email with the form details
+5. The form should display a success message if everything is configured correctly
 
 ## Contact
 
