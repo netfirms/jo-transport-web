@@ -1,3 +1,200 @@
+// Function to validate form
+function validateForm(form) {
+  const name = form.querySelector('#name').value.trim();
+  const email = form.querySelector('#email').value.trim();
+  const phone = form.querySelector('#phone').value.trim();
+  const serviceElement = form.querySelector('#service');
+  const service = serviceElement.value;
+  const message = form.querySelector('#message').value.trim();
+
+  // Required fields validation
+  if (name === '' || email === '' || service === '') {
+    alert(translations.contact.form.validation.required[currentLanguage]);
+    return false;
+  }
+
+  // Name validation - prevent HTML/script injection
+  const nameRegex = /^[A-Za-z\s\-'.]{2,50}$/;
+  if (!nameRegex.test(name)) {
+    alert("Please enter a valid name (2-50 characters, letters, spaces, and basic punctuation only).");
+    return false;
+  }
+
+  // Email validation - more comprehensive
+  const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+  if (!emailRegex.test(email)) {
+    alert(translations.contact.form.validation.email[currentLanguage]);
+    return false;
+  }
+
+  // Phone validation - allow international formats
+  if (phone && !/^[+\d\s\-()]{7,20}$/.test(phone)) {
+    alert("Please enter a valid phone number.");
+    return false;
+  }
+
+  // Message validation - prevent excessive length and script injection
+  if (message && (message.length > 1000 || /<script|<\/script|javascript:/i.test(message))) {
+    alert("Please enter a valid message (max 1000 characters, no scripts).");
+    return false;
+  }
+
+  return true;
+}
+
+// Function to change language
+function changeLanguage(lang) {
+  currentLanguage = lang;
+  localStorage.setItem('language', lang);
+
+  // Handle RTL for Arabic
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  document.documentElement.lang = lang;
+
+  // Add or remove RTL-specific classes
+  if (lang === 'ar') {
+    document.body.classList.add('rtl');
+  } else {
+    document.body.classList.remove('rtl');
+  }
+
+  // Update language selector value
+  const languageSelector = document.getElementById('language-selector');
+  if (languageSelector) {
+    languageSelector.value = lang;
+  }
+
+  // Track language change event
+  if (typeof trackEvent === 'function') {
+    trackEvent('language_change', {
+      language: lang
+    });
+  }
+
+  // Update all translatable elements
+  updatePageContent();
+}
+
+// Function to check if all translations are complete
+function checkTranslationsComplete() {
+  const supportedLanguages = ['en', 'th', 'zh', 'ar', 'ja', 'ko', 'ms', 'ru'];
+  const missingTranslations = [];
+  const languageCounts = {
+    en: 0,
+    th: 0,
+    zh: 0,
+    ar: 0,
+    ja: 0,
+    ko: 0,
+    ms: 0,
+    ru: 0
+  };
+  let totalTranslationKeys = 0;
+
+  // Recursive function to check translations
+  function checkTranslationObject(obj, path = '') {
+    for (const key in obj) {
+      const currentPath = path ? `${path}.${key}` : key;
+
+      // If this is a translation entry (has language keys)
+      if (typeof obj[key] === 'object' && (obj[key].en !== undefined || obj[key].th !== undefined || obj[key].zh !== undefined || obj[key].ar !== undefined)) {
+        totalTranslationKeys++;
+
+        // Check if all languages are present
+        for (const lang of supportedLanguages) {
+          if (obj[key][lang] === undefined) {
+            missingTranslations.push({
+              path: currentPath,
+              language: lang
+            });
+          } else {
+            languageCounts[lang]++;
+          }
+        }
+      } 
+      // If this is a nested object, recurse into it
+      else if (typeof obj[key] === 'object' && key !== 'languageNames') {
+        checkTranslationObject(obj[key], currentPath);
+      }
+    }
+  }
+
+  // Start the recursive check
+  checkTranslationObject(translations);
+
+  // Calculate completion percentages
+  const completionStats = {};
+  for (const lang of supportedLanguages) {
+    completionStats[lang] = {
+      count: languageCounts[lang],
+      total: totalTranslationKeys,
+      percentage: Math.round((languageCounts[lang] / totalTranslationKeys) * 100)
+    };
+  }
+
+  // Log results
+  if (missingTranslations.length > 0) {
+    console.group('⚠️ TRANSLATION CHECK: Incomplete Translations');
+    console.log('Missing translations found:');
+    console.table(missingTranslations);
+    console.log('Translation completion statistics:');
+    console.table(completionStats);
+    console.groupEnd();
+
+    // Show warning in development environment
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      const warningDiv = document.createElement('div');
+      warningDiv.style.position = 'fixed';
+      warningDiv.style.bottom = '10px';
+      warningDiv.style.right = '10px';
+      warningDiv.style.backgroundColor = '#ff9800';
+      warningDiv.style.color = 'white';
+      warningDiv.style.padding = '10px 15px';
+      warningDiv.style.borderRadius = '5px';
+      warningDiv.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+      warningDiv.style.zIndex = '9999';
+      warningDiv.style.fontSize = '14px';
+      warningDiv.style.fontWeight = 'bold';
+      warningDiv.innerHTML = `⚠️ Warning: ${missingTranslations.length} missing translations. Check console for details.`;
+
+      // Add a close button
+      const closeBtn = document.createElement('span');
+      closeBtn.innerHTML = '&times;';
+      closeBtn.style.marginLeft = '10px';
+      closeBtn.style.cursor = 'pointer';
+      closeBtn.onclick = function() { warningDiv.remove(); };
+      warningDiv.appendChild(closeBtn);
+
+      document.body.appendChild(warningDiv);
+    }
+
+    return false;
+  } else {
+    console.group('✅ TRANSLATION CHECK: All Translations Complete');
+    console.log('All translations are complete!');
+    console.log('Translation statistics:');
+    console.table(completionStats);
+    console.groupEnd();
+    return true;
+  }
+}
+
+// Make functions available globally for tests
+if (typeof global !== 'undefined') {
+  global.validateForm = validateForm;
+  global.changeLanguage = changeLanguage;
+  global.checkTranslationsComplete = checkTranslationsComplete;
+}
+
+// Export functions for tests
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    validateForm,
+    changeLanguage,
+    checkTranslationsComplete
+  };
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // CHANGELOG:
     // - Added translation completeness checking functionality
@@ -342,7 +539,12 @@ document.addEventListener('DOMContentLoaded', function() {
         quoteForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
-            // Enhanced form validation with security measures
+            // Use the validateForm function for form validation
+            if (!validateForm(quoteForm)) {
+                return;
+            }
+
+            // Get form values for submission
             const name = document.getElementById('name').value.trim();
             const email = document.getElementById('email').value.trim();
             const phone = document.getElementById('phone').value.trim();
@@ -350,38 +552,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const service = serviceElement.value;
             const serviceText = serviceElement.options[serviceElement.selectedIndex].text;
             const message = document.getElementById('message').value.trim();
-
-            // Required fields validation
-            if (name === '' || email === '' || service === '') {
-                alert(translations.contact.form.validation.required[currentLanguage]);
-                return;
-            }
-
-            // Name validation - prevent HTML/script injection
-            const nameRegex = /^[A-Za-z\s\-'.]{2,50}$/;
-            if (!nameRegex.test(name)) {
-                alert("Please enter a valid name (2-50 characters, letters, spaces, and basic punctuation only).");
-                return;
-            }
-
-            // Email validation - more comprehensive
-            const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-            if (!emailRegex.test(email)) {
-                alert(translations.contact.form.validation.email[currentLanguage]);
-                return;
-            }
-
-            // Phone validation - allow international formats
-            if (phone && !/^[+\d\s\-()]{7,20}$/.test(phone)) {
-                alert("Please enter a valid phone number.");
-                return;
-            }
-
-            // Message validation - prevent excessive length and script injection
-            if (message && (message.length > 1000 || /<script|<\/script|javascript:/i.test(message))) {
-                alert("Please enter a valid message (max 1000 characters, no scripts).");
-                return;
-            }
 
             // Rate limiting - check if form was submitted recently
             const lastSubmission = localStorage.getItem('lastFormSubmission');
@@ -546,32 +716,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Run once on page load
     revealOnScroll();
 
-    // Language switcher functionality
-    function changeLanguage(lang) {
-        currentLanguage = lang;
-        localStorage.setItem('language', lang);
-
-        // Handle RTL for Arabic
-        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-        document.documentElement.lang = lang;
-
-        // Add or remove RTL-specific classes
-        if (lang === 'ar') {
-            document.body.classList.add('rtl');
-        } else {
-            document.body.classList.remove('rtl');
-        }
-
-        // Track language change event
-        if (typeof trackEvent === 'function') {
-            trackEvent('language_change', {
-                language: lang
-            });
-        }
-
-        // Update all translatable elements
-        updatePageContent();
-    }
+    // Language switcher functionality is now defined at the top of the file
 
     // Function to update all text content on the page
     function updatePageContent() {
@@ -627,109 +772,7 @@ document.addEventListener('DOMContentLoaded', function() {
         languageSelector.value = currentLanguage;
     }
 
-    // Function to check if all translations are complete
-    function checkTranslationsComplete() {
-        const supportedLanguages = ['en', 'th', 'zh', 'ar', 'ja', 'ko', 'ms', 'ru'];
-        const missingTranslations = [];
-        const languageCounts = {
-            en: 0,
-            th: 0,
-            zh: 0,
-            ar: 0,
-            ja: 0,
-            ko: 0,
-            ms: 0,
-            ru: 0
-        };
-        let totalTranslationKeys = 0;
-
-        // Recursive function to check translations
-        function checkTranslationObject(obj, path = '') {
-            for (const key in obj) {
-                const currentPath = path ? `${path}.${key}` : key;
-
-                // If this is a translation entry (has language keys)
-                if (typeof obj[key] === 'object' && (obj[key].en !== undefined || obj[key].th !== undefined || obj[key].zh !== undefined || obj[key].ar !== undefined)) {
-                    totalTranslationKeys++;
-
-                    // Check if all languages are present
-                    for (const lang of supportedLanguages) {
-                        if (obj[key][lang] === undefined) {
-                            missingTranslations.push({
-                                path: currentPath,
-                                language: lang
-                            });
-                        } else {
-                            languageCounts[lang]++;
-                        }
-                    }
-                } 
-                // If this is a nested object, recurse into it
-                else if (typeof obj[key] === 'object' && key !== 'languageNames') {
-                    checkTranslationObject(obj[key], currentPath);
-                }
-            }
-        }
-
-        // Start the recursive check
-        checkTranslationObject(translations);
-
-        // Calculate completion percentages
-        const completionStats = {};
-        for (const lang of supportedLanguages) {
-            completionStats[lang] = {
-                count: languageCounts[lang],
-                total: totalTranslationKeys,
-                percentage: Math.round((languageCounts[lang] / totalTranslationKeys) * 100)
-            };
-        }
-
-        // Log results
-        if (missingTranslations.length > 0) {
-            console.group('%c⚠️ TRANSLATION CHECK: Incomplete Translations', 'color: #ff9800; font-size: 14px; font-weight: bold;');
-            console.log('%cMissing translations found:', 'color: #ff5722; font-weight: bold;');
-            console.table(missingTranslations);
-            console.log('%cTranslation completion statistics:', 'color: #2196f3; font-weight: bold;');
-            console.table(completionStats);
-            console.groupEnd();
-
-            // Show warning in development environment
-            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                const warningDiv = document.createElement('div');
-                warningDiv.style.position = 'fixed';
-                warningDiv.style.bottom = '10px';
-                warningDiv.style.right = '10px';
-                warningDiv.style.backgroundColor = '#ff9800';
-                warningDiv.style.color = 'white';
-                warningDiv.style.padding = '10px 15px';
-                warningDiv.style.borderRadius = '5px';
-                warningDiv.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
-                warningDiv.style.zIndex = '9999';
-                warningDiv.style.fontSize = '14px';
-                warningDiv.style.fontWeight = 'bold';
-                warningDiv.innerHTML = `⚠️ Warning: ${missingTranslations.length} missing translations. Check console for details.`;
-
-                // Add a close button
-                const closeBtn = document.createElement('span');
-                closeBtn.innerHTML = '&times;';
-                closeBtn.style.marginLeft = '10px';
-                closeBtn.style.cursor = 'pointer';
-                closeBtn.onclick = function() { warningDiv.remove(); };
-                warningDiv.appendChild(closeBtn);
-
-                document.body.appendChild(warningDiv);
-            }
-
-            return false;
-        } else {
-            console.group('%c✅ TRANSLATION CHECK: All Translations Complete', 'color: #4caf50; font-size: 14px; font-weight: bold;');
-            console.log('%cAll translations are complete!', 'color: #4caf50; font-weight: bold;');
-            console.log('%cTranslation statistics:', 'color: #2196f3; font-weight: bold;');
-            console.table(completionStats);
-            console.groupEnd();
-            return true;
-        }
-    }
+    // Function to check if all translations are complete is now defined at the top of the file
 
     // Check if all translations are complete
     const translationsComplete = checkTranslationsComplete();

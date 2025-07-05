@@ -1,40 +1,17 @@
 // Import Jest DOM extensions for DOM element assertions
 import '@testing-library/jest-dom';
 
+// Import custom mocks
+const documentMock = require('./__mocks__/document');
+const localStorageMock = require('./__mocks__/localStorage');
+const emailjsMock = require('./__mocks__/emailjs');
+
 // Mock global objects that might not be available in the test environment
 global.window = global.window || {};
-global.document = global.document || {
-  createElement: () => ({
-    style: {},
-    setAttribute: () => {},
-    appendChild: () => {}
-  }),
-  documentElement: {
-    style: {},
-    appendChild: () => {}
-  },
-  body: {
-    appendChild: () => {},
-    classList: {
-      add: () => {},
-      remove: () => {}
-    }
-  },
-  querySelector: () => null,
-  querySelectorAll: () => [],
-  getElementById: () => null,
-  getElementsByTagName: () => []
-};
+global.document = documentMock;
 
 // Mock localStorage
-if (!global.localStorage) {
-  global.localStorage = {
-    getItem: jest.fn(),
-    setItem: jest.fn(),
-    removeItem: jest.fn(),
-    clear: jest.fn()
-  };
-}
+global.localStorage = localStorageMock;
 
 // Mock sessionStorage
 if (!global.sessionStorage) {
@@ -57,10 +34,7 @@ global.navigator = global.navigator || {
 };
 
 // Mock EmailJS
-global.emailjs = {
-  init: jest.fn(),
-  send: jest.fn().mockResolvedValue({ status: 200, text: 'OK' })
-};
+global.emailjs = emailjsMock;
 
 // Mock Firebase
 global.firebase = {
