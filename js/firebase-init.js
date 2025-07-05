@@ -69,7 +69,7 @@ function trackEvent(eventName, eventParams = {}) {
 }
 
 // Make trackEvent available globally for tests
-global.trackEvent = trackEvent;
+window.trackEvent = trackEvent;
 
 // Export trackEvent for tests
 if (typeof module !== 'undefined' && module.exports) {

@@ -1,3 +1,83 @@
+// Function to update all text content on the page
+function updatePageContent() {
+    // Update navigation links
+    document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        const keys = key.split('.');
+
+        // Navigate through the translations object to find the right translation
+        let translation = translations;
+        for (const k of keys) {
+            if (translation[k]) {
+                translation = translation[k];
+            } else {
+                console.warn(`Translation key not found: ${key}`);
+                return;
+            }
+        }
+
+        // Apply the translation if found
+        if (translation[currentLanguage]) {
+            if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                if (element.getAttribute('placeholder')) {
+                    element.setAttribute('placeholder', translation[currentLanguage]);
+                } else {
+                    element.value = translation[currentLanguage];
+                }
+            } else if (element.tagName === 'OPTION') {
+                element.textContent = translation[currentLanguage];
+            } else {
+                element.textContent = translation[currentLanguage];
+            }
+        }
+    });
+
+    // Update select options - handle them separately to ensure they're updated correctly
+    document.querySelectorAll('select').forEach(select => {
+        Array.from(select.options).forEach(option => {
+            const key = option.getAttribute('data-i18n');
+            if (key) {
+                const keys = key.split('.');
+                let translation = translations;
+                for (const k of keys) {
+                    if (translation[k]) {
+                        translation = translation[k];
+                    } else {
+                        console.warn(`Translation key not found for option: ${key}`);
+                        return;
+                    }
+                }
+                if (translation[currentLanguage]) {
+                    option.textContent = translation[currentLanguage];
+                }
+            }
+        });
+    });
+
+    // Update document title
+    if (translations.meta && translations.meta.title && translations.meta.title[currentLanguage]) {
+        document.title = translations.meta.title[currentLanguage];
+    }
+
+    // Update meta description
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription && translations.meta && translations.meta.description && translations.meta.description[currentLanguage]) {
+        metaDescription.setAttribute('content', translations.meta.description[currentLanguage]);
+    }
+
+    // Update HTML dir attribute for RTL languages
+    document.documentElement.dir = currentLanguage === 'ar' ? 'rtl' : 'ltr';
+
+    // Update form validation messages
+    const quoteForm = document.getElementById('quote-form');
+    if (quoteForm) {
+        const submitButton = quoteForm.querySelector('button[type="submit"]');
+        if (submitButton) {
+            submitButton.textContent = translations.contact.form.submit[currentLanguage];
+        }
+    }
+}
+
 // Function to validate form
 function validateForm(form) {
   const name = form.querySelector('#name').value.trim();
@@ -249,11 +329,11 @@ validationStyles.textContent = `
 document.head.appendChild(validationStyles);
 
 // Make functions available globally for tests
-if (typeof global !== 'undefined') {
-  global.validateForm = validateForm;
-  global.changeLanguage = changeLanguage;
-  global.checkTranslationsComplete = checkTranslationsComplete;
-  global.showError = showError;
+if (typeof window !== 'undefined') {
+  window.validateForm = validateForm;
+  window.changeLanguage = changeLanguage;
+  window.checkTranslationsComplete = checkTranslationsComplete;
+  window.showError = showError;
 }
 
 // Export functions for tests
@@ -867,49 +947,6 @@ document.addEventListener('DOMContentLoaded', function() {
     revealOnScroll();
 
     // Language switcher functionality is now defined at the top of the file
-
-    // Function to update all text content on the page
-    function updatePageContent() {
-        // Update navigation links
-        document.querySelectorAll('[data-i18n]').forEach(element => {
-            const key = element.getAttribute('data-i18n');
-            const keys = key.split('.');
-
-            // Navigate through the translations object to find the right translation
-            let translation = translations;
-            for (const k of keys) {
-                if (translation[k]) {
-                    translation = translation[k];
-                } else {
-                    console.warn(`Translation key not found: ${key}`);
-                    return;
-                }
-            }
-
-            // Apply the translation if found
-            if (translation[currentLanguage]) {
-                if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                    if (element.getAttribute('placeholder')) {
-                        element.setAttribute('placeholder', translation[currentLanguage]);
-                    } else {
-                        element.value = translation[currentLanguage];
-                    }
-                } else if (element.tagName === 'OPTION') {
-                    element.textContent = translation[currentLanguage];
-                } else {
-                    element.textContent = translation[currentLanguage];
-                }
-            }
-        });
-
-        // Update form validation messages
-        if (quoteForm) {
-            const submitButton = quoteForm.querySelector('button[type="submit"]');
-            if (submitButton) {
-                submitButton.textContent = translations.contact.form.submit[currentLanguage];
-            }
-        }
-    }
 
     // Initialize language selector
     const languageSelector = document.getElementById('language-selector');
