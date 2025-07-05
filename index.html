@@ -49,9 +49,6 @@
         }
 
         /* Custom styles that can't be easily replaced with Tailwind */
-        .hero-bg {
-            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('images/hero-background.png') no-repeat center center/cover;
-        }
 
         .section-title::after {
             content: '';
@@ -212,7 +209,25 @@
         </div>
     </header>
 
-    <section id="home" class="hero hero-bg min-h-screen flex items-center text-center text-white mt-0 relative py-[120px] pb-20">
+    <section id="home" class="hero min-h-screen flex items-center text-center text-white mt-0 relative py-[120px] pb-20">
+        <!-- Video background container -->
+        <div class="absolute inset-0 w-full h-full overflow-hidden">
+            <!-- Video overlay for better text readability -->
+            <div class="absolute inset-0 bg-black opacity-50 z-[1]"></div>
+
+            <!-- First video -->
+            <video id="hero-video-1" class="absolute inset-0 w-full h-full object-cover" autoplay muted playsinline>
+                <source src="images/Airport_Services_Video_Creation_Request.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+
+            <!-- Second video (initially hidden) -->
+            <video id="hero-video-2" class="absolute inset-0 w-full h-full object-cover hidden" autoplay muted playsinline>
+                <source src="images/Airport_Transportation_Video_Plan.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
         <div class="container mx-auto px-5 relative z-10">
             <div class="hero-content max-w-[900px] mx-auto px-5 relative z-10 fadeInUp">
                 <h1 data-i18n="hero.title" class="text-5xl md:text-6xl mb-6 font-bold font-secondary leading-tight tracking-tight">Premium Transportation Services</h1>

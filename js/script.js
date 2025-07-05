@@ -11,6 +11,38 @@ document.addEventListener('DOMContentLoaded', function() {
         emailjs.init("44SbPdv3lcp7pJ3VE");
     })();
 
+    // Hero section video handling
+    const setupHeroVideos = function() {
+        const video1 = document.getElementById('hero-video-1');
+        const video2 = document.getElementById('hero-video-2');
+
+        if (!video1 || !video2) return; // Exit if videos don't exist
+
+        // Function to switch between videos
+        const switchVideos = function() {
+            if (video1.classList.contains('hidden')) {
+                // Switch from video2 to video1
+                video2.classList.add('hidden');
+                video1.classList.remove('hidden');
+                video1.currentTime = 0;
+                video1.play();
+            } else {
+                // Switch from video1 to video2
+                video1.classList.add('hidden');
+                video2.classList.remove('hidden');
+                video2.currentTime = 0;
+                video2.play();
+            }
+        };
+
+        // Listen for the end of each video
+        video1.addEventListener('ended', switchVideos);
+        video2.addEventListener('ended', switchVideos);
+    };
+
+    // Initialize hero videos
+    setupHeroVideos();
+
     // DOM Elements
     const nav = document.querySelector('nav');
     const header = document.querySelector('header');
