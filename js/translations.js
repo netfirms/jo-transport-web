@@ -36,12 +36,6 @@ const translations = {
       zh: "我们的车队",
       ar: "أسطولنا"
     },
-    team: {
-      en: "Our Team",
-      th: "ทีมงานของเรา",
-      zh: "我们的团队",
-      ar: "فريقنا"
-    },
     customers: {
       en: "Our Customers",
       th: "ลูกค้าของเรา",
@@ -262,15 +256,6 @@ const translations = {
     }
   },
 
-  // Team section
-  team: {
-    title: {
-      en: "Our Team",
-      th: "ทีมงานของเรา",
-      zh: "我们的团队",
-      ar: "فريقنا"
-    }
-  },
 
   // Customers section
   customers: {
