@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services - J.O Transportation and service Co..Ltd.</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Additional styles for the services page */
+        .service-detail {
+            padding: 120px 0;
+            background-color: var(--bg-light);
+        }
+
+        .service-detail-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .service-detail-item {
+            background-color: var(--bg-white);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.4s ease;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .service-detail-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .service-detail-item:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .service-detail-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .service-detail-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .service-detail-info {
+            padding: 30px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .service-detail-info h3 {
+            margin-bottom: 15px;
+            color: var(--secondary-color);
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .service-detail-info p {
+            margin-bottom: 15px;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .service-detail-info ul {
+            list-style: none;
+            padding-left: 5px;
+            margin-bottom: 20px;
+        }
+
+        .service-detail-info ul li {
+            margin-bottom: 10px;
+            color: var(--text-light);
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .service-detail-info ul li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .back-to-home {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 14px 28px;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Reveal animations for service items
+            const serviceItems = document.querySelectorAll('.service-detail-item');
+
+            setTimeout(function() {
+                serviceItems.forEach((item, index) => {
+                    setTimeout(function() {
+                        item.classList.add('visible');
+                    }, index * 150);
+                });
+            }, 300);
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="info/Screenshot_2568-07-05_at_00.11.34-removebg-preview.png" alt="J.O Transportation and service Co..Ltd. Logo">
+                    <h1>J.O Transportation and service Co..Ltd.</h1>
+                </a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html#home">Home</a></li>
+                    <li><a href="index.html#about">About Us</a></li>
+                    <li><a href="index.html#services">Services</a></li>
+                    <li><a href="index.html#fleet">Our Fleet</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <section class="service-detail">
+        <div class="container">
+            <h2 class="section-title">Our Services in Detail</h2>
+            <p class="section-description">Explore our comprehensive range of transportation services designed to meet your specific needs.</p>
+
+            <div class="service-detail-content">
+                <div class="service-detail-item">
+                    <img src="info/Screenshot 2568-07-04 at 23.58.59.png" alt="Nationwide Transport">
+                    <div class="service-detail-info">
+                        <h3>Nationwide Transport</h3>
+                        <p>Our nationwide transport service offers reliable and efficient transportation solutions across the country. We ensure your vehicle reaches its destination safely and on time.</p>
+                        <ul>
+                            <li>Door-to-door delivery service</li>
+                            <li>Real-time tracking of your vehicle</li>
+                            <li>Flexible scheduling options</li>
+                            <li>Competitive pricing with no hidden fees</li>
+                            <li>Insurance coverage for peace of mind</li>
+                        </ul>
+                        <p>Whether you're relocating, purchasing a vehicle from another state, or need to transport multiple vehicles, our nationwide transport service has you covered.</p>
+                    </div>
+                </div>
+
+                <div class="service-detail-item">
+                    <img src="info/Screenshot 2568-07-04 at 23.58.44.png" alt="Secure Transport">
+                    <div class="service-detail-info">
+                        <h3>Secure Transport</h3>
+                        <p>Our secure transport service provides enhanced protection for your valuable vehicles. We use specialized equipment and follow strict protocols to ensure maximum security during transit.</p>
+                        <ul>
+                            <li>Enclosed transport options for premium protection</li>
+                            <li>Advanced vehicle securing systems</li>
+                            <li>Experienced drivers trained in secure handling</li>
+                            <li>Comprehensive insurance coverage</li>
+                            <li>Regular status updates throughout the journey</li>
+                        </ul>
+                        <p>Ideal for luxury, classic, or high-value vehicles that require extra care and protection during transportation.</p>
+                    </div>
+                </div>
+
+                <div class="service-detail-item">
+                    <img src="images/car-carriers.png" alt="All Vehicle Types">
+                    <div class="service-detail-info">
+                        <h3>All Vehicle Types</h3>
+                        <p>We have the expertise and equipment to transport all types of vehicles, from standard cars to specialty automobiles.</p>
+                        <ul>
+                            <li>Sedans, SUVs, and pickup trucks</li>
+                            <li>Luxury and exotic cars</li>
+                            <li>Classic and vintage automobiles</li>
+                            <li>Motorcycles and ATVs</li>
+                            <li>Modified and oversized vehicles</li>
+                        </ul>
+                        <p>Our team will assess your specific vehicle requirements and provide the most appropriate transport solution to ensure safe delivery.</p>
+                    </div>
+                </div>
+
+                <div class="service-detail-item">
+                    <img src="images/flatbed-truck.png" alt="Corporate Services">
+                    <div class="service-detail-info">
+                        <h3>Corporate Services</h3>
+                        <p>Our corporate services are tailored for businesses that require regular or bulk vehicle transportation. We offer specialized solutions for dealerships, auctions, and corporate fleet relocations.</p>
+                        <ul>
+                            <li>Volume discounts for multiple vehicles</li>
+                            <li>Dedicated account manager</li>
+                            <li>Customized transportation schedules</li>
+                            <li>Streamlined booking and documentation process</li>
+                            <li>Regular reporting and analytics</li>
+                        </ul>
+                        <p>Partner with us for your business transportation needs and experience our commitment to reliability, efficiency, and customer satisfaction.</p>
+                    </div>
+                </div>
+            </div>
+
+            <a href="index.html#services" class="btn back-to-home">Back to Services Overview</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h2>J.O Transportation and service Co..Ltd.</h2>
+                    <p>Your trusted partner in car transportation</p>
+                </div>
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html#home">Home</a></li>
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="index.html#services">Services</a></li>
+                        <li><a href="index.html#fleet">Our Fleet</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-social">
+                    <h3>Follow Us</h3>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 J.O Transportation and service Co..Ltd. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
