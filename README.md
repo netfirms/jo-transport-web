@@ -145,6 +145,23 @@ After configuration:
 4. You should receive an email with the form details
 5. The form should display a success message if everything is configured correctly
 
+## Viewport Configuration
+
+The website uses specific viewport meta tag settings to ensure consistent rendering across different environments, particularly between local development and GitHub Pages:
+
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+```
+
+These settings help address the following issues:
+
+- **width=device-width, initial-scale=1.0**: Sets the width of the viewport to the device width and initial zoom level to 1.0
+- **maximum-scale=1.0**: Prevents users from zooming in beyond 1.0, maintaining consistent layout
+- **user-scalable=no**: Disables user scaling/zooming, which can cause layout inconsistencies
+- **shrink-to-fit=no**: Prevents iOS from automatically scaling down content to fit the viewport
+
+This configuration was implemented to fix page size differences between local development environments and GitHub Pages deployment.
+
 ## Contact
 
 For questions or issues regarding this website, please contact the repository owner.
