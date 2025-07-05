@@ -7,39 +7,89 @@ function validateForm(form) {
   const service = serviceElement.value;
   const message = form.querySelector('#message').value.trim();
 
+  // Clear all previous error messages
+  form.querySelectorAll('.error-message').forEach(el => el.remove());
+  form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+  form.querySelectorAll('.is-valid').forEach(el => el.classList.remove('is-valid'));
+
+  let isValid = true;
+
   // Required fields validation
-  if (name === '' || email === '' || service === '') {
-    alert(translations.contact.form.validation.required[currentLanguage]);
-    return false;
+  if (name === '') {
+    showError(form.querySelector('#name'), translations.contact.form.validation.required[currentLanguage]);
+    isValid = false;
+  }
+
+  if (email === '') {
+    showError(form.querySelector('#email'), translations.contact.form.validation.required[currentLanguage]);
+    isValid = false;
+  }
+
+  if (service === '') {
+    showError(form.querySelector('#service'), translations.contact.form.validation.required[currentLanguage]);
+    isValid = false;
   }
 
   // Name validation - prevent HTML/script injection
   const nameRegex = /^[A-Za-z\s\-'.]{2,50}$/;
-  if (!nameRegex.test(name)) {
-    alert("Please enter a valid name (2-50 characters, letters, spaces, and basic punctuation only).");
-    return false;
+  if (name !== '' && !nameRegex.test(name)) {
+    showError(form.querySelector('#name'), translations.contact.form.validation.name ? 
+      translations.contact.form.validation.name[currentLanguage] : 
+      "Please enter a valid name (2-50 characters, letters, spaces, and basic punctuation only).");
+    isValid = false;
+  } else if (name !== '') {
+    form.querySelector('#name').classList.add('is-valid');
   }
 
   // Email validation - more comprehensive
   const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-  if (!emailRegex.test(email)) {
-    alert(translations.contact.form.validation.email[currentLanguage]);
-    return false;
+  if (email !== '' && !emailRegex.test(email)) {
+    showError(form.querySelector('#email'), translations.contact.form.validation.email[currentLanguage]);
+    isValid = false;
+  } else if (email !== '') {
+    form.querySelector('#email').classList.add('is-valid');
   }
 
   // Phone validation - allow international formats
   if (phone && !/^[+\d\s\-()]{7,20}$/.test(phone)) {
-    alert("Please enter a valid phone number.");
-    return false;
+    showError(form.querySelector('#phone'), translations.contact.form.validation.phone ? 
+      translations.contact.form.validation.phone[currentLanguage] : 
+      "Please enter a valid phone number.");
+    isValid = false;
+  } else if (phone !== '') {
+    form.querySelector('#phone').classList.add('is-valid');
   }
 
   // Message validation - prevent excessive length and script injection
   if (message && (message.length > 1000 || /<script|<\/script|javascript:/i.test(message))) {
-    alert("Please enter a valid message (max 1000 characters, no scripts).");
-    return false;
+    showError(form.querySelector('#message'), translations.contact.form.validation.message ? 
+      translations.contact.form.validation.message[currentLanguage] : 
+      "Please enter a valid message (max 1000 characters, no scripts).");
+    isValid = false;
+  } else if (message !== '') {
+    form.querySelector('#message').classList.add('is-valid');
   }
 
-  return true;
+  // Service validation
+  if (service !== '') {
+    form.querySelector('#service').classList.add('is-valid');
+  }
+
+  return isValid;
+}
+
+// Helper function to show error messages
+function showError(inputElement, message) {
+  // Add error class to input
+  inputElement.classList.add('is-invalid');
+
+  // Create error message element
+  const errorDiv = document.createElement('div');
+  errorDiv.className = 'error-message text-red-500 text-sm mt-1';
+  errorDiv.textContent = message;
+
+  // Insert error message after the input element
+  inputElement.parentNode.insertBefore(errorDiv, inputElement.nextSibling);
 }
 
 // Function to change language
@@ -179,11 +229,31 @@ function checkTranslationsComplete() {
   }
 }
 
+// Add CSS styles for form validation
+const validationStyles = document.createElement('style');
+validationStyles.textContent = `
+    .is-invalid {
+        border-color: #e53e3e !important;
+        background-color: #fff5f5 !important;
+    }
+    .is-valid {
+        border-color: #38a169 !important;
+        background-color: #f0fff4 !important;
+    }
+    .error-message {
+        color: #e53e3e;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+`;
+document.head.appendChild(validationStyles);
+
 // Make functions available globally for tests
 if (typeof global !== 'undefined') {
   global.validateForm = validateForm;
   global.changeLanguage = changeLanguage;
   global.checkTranslationsComplete = checkTranslationsComplete;
+  global.showError = showError;
 }
 
 // Export functions for tests
@@ -191,7 +261,8 @@ if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     validateForm,
     changeLanguage,
-    checkTranslationsComplete
+    checkTranslationsComplete,
+    showError
   };
 }
 
@@ -534,8 +605,87 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Form validation styles are added at the top of the script
+
     // Form validation and submission
     if (quoteForm) {
+        // Add real-time validation for each field
+        const formFields = quoteForm.querySelectorAll('input, textarea, select');
+        formFields.forEach(field => {
+            field.addEventListener('blur', function() {
+                // Validate only this field
+                validateField(this, quoteForm);
+            });
+
+            // For select elements, also validate on change
+            if (field.tagName === 'SELECT') {
+                field.addEventListener('change', function() {
+                    validateField(this, quoteForm);
+                });
+            }
+        });
+
+        // Function to validate a single field
+        function validateField(field, form) {
+            // Clear previous validation for this field
+            const previousError = field.nextElementSibling;
+            if (previousError && previousError.classList.contains('error-message')) {
+                previousError.remove();
+            }
+            field.classList.remove('is-invalid');
+            field.classList.remove('is-valid');
+
+            const id = field.id;
+            const value = field.value.trim();
+
+            // Validate based on field type
+            switch(id) {
+                case 'name':
+                    if (field.hasAttribute('required') && value === '') {
+                        showError(field, translations.contact.form.validation.required[currentLanguage]);
+                    } else if (value !== '' && !/^[A-Za-z\s\-'.]{2,50}$/.test(value)) {
+                        showError(field, translations.contact.form.validation.name[currentLanguage]);
+                    } else if (value !== '') {
+                        field.classList.add('is-valid');
+                    }
+                    break;
+
+                case 'email':
+                    if (field.hasAttribute('required') && value === '') {
+                        showError(field, translations.contact.form.validation.required[currentLanguage]);
+                    } else if (value !== '' && !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(value)) {
+                        showError(field, translations.contact.form.validation.email[currentLanguage]);
+                    } else if (value !== '') {
+                        field.classList.add('is-valid');
+                    }
+                    break;
+
+                case 'phone':
+                    if (value !== '' && !/^[+\d\s\-()]{7,20}$/.test(value)) {
+                        showError(field, translations.contact.form.validation.phone[currentLanguage]);
+                    } else if (value !== '') {
+                        field.classList.add('is-valid');
+                    }
+                    break;
+
+                case 'service':
+                    if (field.hasAttribute('required') && value === '') {
+                        showError(field, translations.contact.form.validation.required[currentLanguage]);
+                    } else if (value !== '') {
+                        field.classList.add('is-valid');
+                    }
+                    break;
+
+                case 'message':
+                    if (value !== '' && (value.length > 1000 || /<script|<\/script|javascript:/i.test(value))) {
+                        showError(field, translations.contact.form.validation.message[currentLanguage]);
+                    } else if (value !== '') {
+                        field.classList.add('is-valid');
+                    }
+                    break;
+            }
+        }
+
         quoteForm.addEventListener('submit', function(e) {
             e.preventDefault();
 

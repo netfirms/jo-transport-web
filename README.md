@@ -156,6 +156,21 @@ After setting up EmailJS, you need to update the following files:
 3. Replace `YOUR_SERVICE_ID` with your actual EmailJS service ID (around line 120)
 4. Replace `YOUR_TEMPLATE_ID` with your actual EmailJS template ID (around line 120)
 
+### Form Validation Features
+
+The quote request form includes comprehensive validation to ensure data quality:
+
+1. **Real-time Validation**: Fields are validated as users type or when they leave a field
+2. **Visual Feedback**: Valid and invalid fields are highlighted with different colors
+3. **Error Messages**: Clear error messages are displayed below each field when validation fails
+4. **Multilingual Validation**: Error messages are translated based on the selected language
+5. **Validation Rules**:
+   - Name: 2-50 characters, letters, spaces, and basic punctuation only
+   - Email: Standard email format validation
+   - Phone: International format support, 7-20 digits with optional formatting characters
+   - Service: Required selection
+   - Message: Maximum 1000 characters, no script tags or JavaScript code
+
 ### Testing the Form
 
 After configuration:
