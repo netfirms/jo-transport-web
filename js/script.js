@@ -15,29 +15,43 @@ document.addEventListener('DOMContentLoaded', function() {
     const setupHeroVideos = function() {
         const video1 = document.getElementById('hero-video-1');
         const video2 = document.getElementById('hero-video-2');
+        const video3 = document.getElementById('hero-video-3');
 
-        if (!video1 || !video2) return; // Exit if videos don't exist
+        if (!video1 || !video2 || !video3) return; // Exit if videos don't exist
+
+        // Track current active video (1, 2, or 3)
+        let currentVideo = 1;
 
         // Function to switch between videos
         const switchVideos = function() {
-            if (video1.classList.contains('hidden')) {
-                // Switch from video2 to video1
-                video2.classList.add('hidden');
+            // Hide all videos first
+            video1.classList.add('hidden');
+            video2.classList.add('hidden');
+            video3.classList.add('hidden');
+
+            // Determine next video to show
+            currentVideo = (currentVideo % 3) + 1; // Cycle through 1, 2, 3
+
+            // Show and play the next video
+            if (currentVideo === 1) {
                 video1.classList.remove('hidden');
                 video1.currentTime = 0;
                 video1.play();
-            } else {
-                // Switch from video1 to video2
-                video1.classList.add('hidden');
+            } else if (currentVideo === 2) {
                 video2.classList.remove('hidden');
                 video2.currentTime = 0;
                 video2.play();
+            } else { // currentVideo === 3
+                video3.classList.remove('hidden');
+                video3.currentTime = 0;
+                video3.play();
             }
         };
 
         // Listen for the end of each video
         video1.addEventListener('ended', switchVideos);
         video2.addEventListener('ended', switchVideos);
+        video3.addEventListener('ended', switchVideos);
     };
 
     // Initialize hero videos

@@ -183,18 +183,18 @@
             </div>
             <nav class="transition-all duration-300">
                 <ul class="flex">
-                    <li class="ml-[5px]"><a href="#home" data-i18n="nav.home" class="text-dark font-medium px-[18px] py-[10px] transition-all duration-300 text-sm hover:text-primary">Home</a></li>
-                    <li class="ml-[5px]"><a href="#about" data-i18n="nav.about" class="text-dark font-medium px-[18px] py-[10px] transition-all duration-300 text-sm hover:text-primary">About Us</a></li>
-                    <li class="ml-[5px]"><a href="#services" data-i18n="nav.services" class="text-dark font-medium px-[18px] py-[10px] transition-all duration-300 text-sm hover:text-primary">Services</a></li>
-                    <li class="ml-[5px]"><a href="#fleet" data-i18n="nav.fleet" class="text-dark font-medium px-[18px] py-[10px] transition-all duration-300 text-sm hover:text-primary">Our Fleet</a></li>
-                    <li class="ml-[5px]"><a href="#customers" data-i18n="nav.customers" class="text-dark font-medium px-[18px] py-[10px] transition-all duration-300 text-sm hover:text-primary">Our Customers</a></li>
-                    <li class="ml-[5px]"><a href="#contact" data-i18n="nav.contact" class="text-dark font-medium px-[18px] py-[10px] transition-all duration-300 text-sm hover:text-primary">Contact</a></li>
+                    <li class="ml-[5px]"><a href="#home" data-i18n="nav.home" class="text-dark font-medium px-[18px] py-[10px] transition-all duration-300 text-base hover:text-primary">Home</a></li>
+                    <li class="ml-[5px]"><a href="#about" data-i18n="nav.about" class="text-dark font-medium px-[18px] py-[10px] transition-all duration-300 text-base hover:text-primary">About Us</a></li>
+                    <li class="ml-[5px]"><a href="#services" data-i18n="nav.services" class="text-dark font-medium px-[18px] py-[10px] transition-all duration-300 text-base hover:text-primary">Services</a></li>
+                    <li class="ml-[5px]"><a href="#fleet" data-i18n="nav.fleet" class="text-dark font-medium px-[18px] py-[10px] transition-all duration-300 text-base hover:text-primary">Our Fleet</a></li>
+                    <li class="ml-[5px]"><a href="#customers" data-i18n="nav.customers" class="text-dark font-medium px-[18px] py-[10px] transition-all duration-300 text-base hover:text-primary">Our Customers</a></li>
+                    <li class="ml-[5px]"><a href="#contact" data-i18n="nav.contact" class="text-dark font-medium px-[18px] py-[10px] transition-all duration-300 text-base hover:text-primary">Contact</a></li>
                 </ul>
             </nav>
             <div class="flex items-center">
                 <!-- Language Selector -->
                 <div class="language-selector-container mr-4">
-                    <select id="language-selector" class="bg-white border border-gray-200 text-gray-700 py-2 px-3 pr-8 rounded-lg leading-tight focus:outline-none focus:border-primary text-sm">
+                    <select id="language-selector" class="bg-white border border-gray-200 text-gray-700 py-2 px-3 pr-8 rounded-lg leading-tight focus:outline-none focus:border-primary text-base">
                         <option value="en">English</option>
                         <option value="th">ไทย</option>
                         <option value="zh">中文</option>
@@ -224,6 +224,12 @@
             <!-- Second video (initially hidden) -->
             <video id="hero-video-2" class="absolute inset-0 w-full h-full object-cover hidden" autoplay muted playsinline>
                 <source src="images/Airport_Transportation_Video_Plan.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+
+            <!-- Third video (initially hidden) -->
+            <video id="hero-video-3" class="absolute inset-0 w-full h-full object-cover hidden" autoplay muted playsinline>
+                <source src="images/Video_Prompt_for_Airport_Services.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
         </div>
@@ -268,7 +274,7 @@
                     <div class="p-6 flex-grow flex flex-col">
                         <h3 data-i18n="services.arrival.title" class="mb-4 text-dark text-xl font-semibold">Arrival and Departure Services</h3>
                         <p data-i18n="services.arrival.description" class="mb-6 text-textLight leading-relaxed flex-grow">Professional transportation services for airport arrivals and departures, ensuring timely and comfortable transfers.</p>
-                        <a href="services.html" data-i18n="services.learnMore" class="inline-block bg-primary text-white py-2 px-6 rounded font-semibold text-sm tracking-wide shadow-md transition-all duration-300 hover:bg-opacity-90 hover:-translate-y-1 self-start mt-auto">Learn More</a>
+                        <a href="services.html" data-i18n="services.learnMore" class="inline-block bg-primary text-white py-2 px-6 rounded font-semibold text-base tracking-wide shadow-md transition-all duration-300 hover:bg-opacity-90 hover:-translate-y-1 self-start mt-auto">Learn More</a>
                     </div>
                 </div>
                 <div class="bg-white rounded shadow-custom transition-all duration-300 hover:-translate-y-2 hover:shadow-custom-hover overflow-hidden flex flex-col h-full">
@@ -278,7 +284,7 @@
                     <div class="p-6 flex-grow flex flex-col">
                         <h3 data-i18n="services.fastTrack.title" class="mb-4 text-dark text-xl font-semibold">Fast Track Service</h3>
                         <p data-i18n="services.fastTrack.description" class="mb-6 text-textLight leading-relaxed flex-grow">Expedited transportation solutions for clients who need priority service and quick turnaround times.</p>
-                        <a href="services.html" data-i18n="services.learnMore" class="inline-block bg-primary text-white py-2 px-6 rounded font-semibold text-sm tracking-wide shadow-md transition-all duration-300 hover:bg-opacity-90 hover:-translate-y-1 self-start mt-auto">Learn More</a>
+                        <a href="services.html" data-i18n="services.learnMore" class="inline-block bg-primary text-white py-2 px-6 rounded font-semibold text-base tracking-wide shadow-md transition-all duration-300 hover:bg-opacity-90 hover:-translate-y-1 self-start mt-auto">Learn More</a>
                     </div>
                 </div>
             </div>
@@ -396,19 +402,19 @@
                     <form id="quote-form">
                         <h3 data-i18n="contact.form.title" class="mb-6 text-dark text-center text-2xl font-semibold">Request a Quote</h3>
                         <div class="mb-5">
-                            <label data-i18n="contact.form.name.label" for="name" class="block mb-2 font-medium text-dark text-sm">Full Name</label>
+                            <label data-i18n="contact.form.name.label" for="name" class="block mb-2 font-medium text-dark text-base">Full Name</label>
                             <input type="text" id="name" name="name" data-i18n="contact.form.name.placeholder" placeholder="Enter your full name" required class="w-full py-3 px-4 border border-borderColor rounded font-primary text-base transition-all duration-300 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary">
                         </div>
                         <div class="mb-5">
-                            <label data-i18n="contact.form.email.label" for="email" class="block mb-2 font-medium text-dark text-sm">Email Address</label>
+                            <label data-i18n="contact.form.email.label" for="email" class="block mb-2 font-medium text-dark text-base">Email Address</label>
                             <input type="email" id="email" name="email" data-i18n="contact.form.email.placeholder" placeholder="Enter your email address" required class="w-full py-3 px-4 border border-borderColor rounded font-primary text-base transition-all duration-300 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary">
                         </div>
                         <div class="mb-5">
-                            <label data-i18n="contact.form.phone.label" for="phone" class="block mb-2 font-medium text-dark text-sm">Phone Number</label>
+                            <label data-i18n="contact.form.phone.label" for="phone" class="block mb-2 font-medium text-dark text-base">Phone Number</label>
                             <input type="tel" id="phone" name="phone" data-i18n="contact.form.phone.placeholder" placeholder="Enter your phone number" class="w-full py-3 px-4 border border-borderColor rounded font-primary text-base transition-all duration-300 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary">
                         </div>
                         <div class="mb-5">
-                            <label data-i18n="contact.form.service.label" for="service" class="block mb-2 font-medium text-dark text-sm">Service Type</label>
+                            <label data-i18n="contact.form.service.label" for="service" class="block mb-2 font-medium text-dark text-base">Service Type</label>
                             <select id="service" name="service" required class="w-full py-3 px-4 border border-borderColor rounded font-primary text-base transition-all duration-300 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary">
                                 <option value="" disabled selected data-i18n="contact.form.service.placeholder">Select a service</option>
                                 <option value="airport" data-i18n="contact.form.service.options.airport">Airport Transfer</option>
@@ -422,7 +428,7 @@
                             </select>
                         </div>
                         <div class="mb-5">
-                            <label data-i18n="contact.form.message.label" for="message" class="block mb-2 font-medium text-dark text-sm">Additional Details</label>
+                            <label data-i18n="contact.form.message.label" for="message" class="block mb-2 font-medium text-dark text-base">Additional Details</label>
                             <textarea id="message" name="message" data-i18n="contact.form.message.placeholder" placeholder="Tell us more about your requirements" rows="4" class="w-full py-3 px-4 border border-borderColor rounded font-primary text-base transition-all duration-300 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"></textarea>
                         </div>
                         <button type="submit" data-i18n="contact.form.submit" class="w-full py-3 px-4 bg-primary text-white rounded font-semibold text-base tracking-wide shadow-md transition-all duration-300 hover:bg-opacity-90 hover:-translate-y-1 mt-2.5">Submit Request</button>
@@ -442,12 +448,12 @@
                 <div class="footer-links">
                     <h3 data-i18n="footer.quickLinks.title" class="text-xl font-semibold text-white mb-6 relative pb-3 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-10 after:h-[2px] after:bg-primary after:rounded">Quick Links</h3>
                     <ul>
-                        <li class="mb-3"><a href="#home" data-i18n="nav.home" class="text-white/70 transition-all duration-300 hover:text-white hover:pl-1 relative">Home</a></li>
-                        <li class="mb-3"><a href="#about" data-i18n="nav.about" class="text-white/70 transition-all duration-300 hover:text-white hover:pl-1 relative">About Us</a></li>
-                        <li class="mb-3"><a href="#services" data-i18n="nav.services" class="text-white/70 transition-all duration-300 hover:text-white hover:pl-1 relative">Services</a></li>
-                        <li class="mb-3"><a href="#fleet" data-i18n="nav.fleet" class="text-white/70 transition-all duration-300 hover:text-white hover:pl-1 relative">Our Fleet</a></li>
-                        <li class="mb-3"><a href="#customers" data-i18n="nav.customers" class="text-white/70 transition-all duration-300 hover:text-white hover:pl-1 relative">Our Customers</a></li>
-                        <li class="mb-3"><a href="#contact" data-i18n="nav.contact" class="text-white/70 transition-all duration-300 hover:text-white hover:pl-1 relative">Contact</a></li>
+                        <li class="mb-3"><a href="#home" data-i18n="nav.home" class="text-white/70 transition-all duration-300 hover:text-white hover:pl-1 relative text-base">Home</a></li>
+                        <li class="mb-3"><a href="#about" data-i18n="nav.about" class="text-white/70 transition-all duration-300 hover:text-white hover:pl-1 relative text-base">About Us</a></li>
+                        <li class="mb-3"><a href="#services" data-i18n="nav.services" class="text-white/70 transition-all duration-300 hover:text-white hover:pl-1 relative text-base">Services</a></li>
+                        <li class="mb-3"><a href="#fleet" data-i18n="nav.fleet" class="text-white/70 transition-all duration-300 hover:text-white hover:pl-1 relative text-base">Our Fleet</a></li>
+                        <li class="mb-3"><a href="#customers" data-i18n="nav.customers" class="text-white/70 transition-all duration-300 hover:text-white hover:pl-1 relative text-base">Our Customers</a></li>
+                        <li class="mb-3"><a href="#contact" data-i18n="nav.contact" class="text-white/70 transition-all duration-300 hover:text-white hover:pl-1 relative text-base">Contact</a></li>
                     </ul>
                 </div>
                 <div>
@@ -461,7 +467,7 @@
                 </div>
             </div>
             <div class="text-center pt-6 border-t border-white/10">
-                <p data-i18n="footer.copyright" class="text-white/60 text-sm">&copy; 2024 J.O Transportation and service Co..Ltd. All Rights Reserved.</p>
+                <p data-i18n="footer.copyright" class="text-white/60 text-base">&copy; 2024 J.O Transportation and service Co..Ltd. All Rights Reserved.</p>
             </div>
         </div>
     </footer>
