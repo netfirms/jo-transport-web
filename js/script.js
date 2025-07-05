@@ -155,7 +155,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const name = document.getElementById('name').value.trim();
             const email = document.getElementById('email').value.trim();
             const phone = document.getElementById('phone').value.trim();
-            const service = document.getElementById('service').value;
+            const serviceElement = document.getElementById('service');
+            const service = serviceElement.value;
+            const serviceText = serviceElement.options[serviceElement.selectedIndex].text;
             const message = document.getElementById('message').value.trim();
 
             if (name === '' || email === '' || service === '') {
@@ -182,13 +184,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 from_name: name,
                 from_email: email,
                 from_phone: phone,
-                service_type: service,
-                message: `${name} \n (${email} \n ${phone}) \n- ${service} \n- ${message}`,
-                title: `New Service Request: ${service} `,
+                service_type: serviceText,
+                message: `${name} \n (${email} \n ${phone}) \n- ${serviceText} \n- ${message}`,
+                title: `New Service Request: ${serviceText} `,
                 name: name,
                 email: email,
                 phone: phone,
-                service: service
+                service: serviceText
             };
 
             // Send email using EmailJS
