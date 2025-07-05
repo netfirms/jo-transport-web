@@ -191,7 +191,7 @@ nav ul li a {
     position: relative;
     border-radius: var(--border-radius-sm);
     transition: var(--transition);
-    font-size: 13px;
+    font-size: 11px;
     letter-spacing: 1px;
     text-transform: uppercase;
 }
@@ -202,23 +202,7 @@ nav ul li a.active {
     background-color: rgba(212, 175, 55, 0.1);
 }
 
-.mobile-menu-btn {
-    display: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: var(--primary-color);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: var(--transition);
-}
-
-.mobile-menu-btn:hover {
-    background-color: rgba(212, 175, 55, 0.08);
-}
+/* Mobile menu button removed as per requirements */
 
 /* Hero Section */
 .hero {
@@ -1016,39 +1000,25 @@ footer::before {
         font-size: 20px;
     }
 
+    /* Mobile navigation styles modified - hamburger menu removed */
     nav {
-        position: fixed;
-        top: 70px;
-        left: -100%;
-        width: 80%;
-        height: calc(100vh - 70px);
-        background-color: white;
-        flex-direction: column;
-        transition: var(--transition);
-        box-shadow: 2px 0 10px rgba(15, 30, 61, 0.1);
-        border-right: 1px solid rgba(212, 175, 55, 0.1);
-    }
-
-    nav.active {
-        left: 0;
+        display: flex;
+        justify-content: center;
     }
 
     nav ul {
-        flex-direction: column;
-        padding: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
     }
 
     nav ul li {
-        margin: 15px 0;
+        margin: 5px;
     }
 
     nav ul li a {
-        display: block;
-        padding: 12px 20px;
-    }
-
-    .mobile-menu-btn {
-        display: block;
+        padding: 8px 12px;
+        font-size: 10px;
     }
 
     .section-title {

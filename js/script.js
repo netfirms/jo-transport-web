@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', function() {
     })();
 
     // DOM Elements
-    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
     const nav = document.querySelector('nav');
     const header = document.querySelector('header');
     const sections = document.querySelectorAll('section[id]');
@@ -22,47 +21,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Current language (default: English)
     let currentLanguage = localStorage.getItem('language') || 'en';
 
-    // Mobile Menu Toggle
-    if (mobileMenuBtn) {
-        mobileMenuBtn.addEventListener('click', function() {
-            nav.classList.toggle('active');
-            // Toggle icon between bars and times
-            const icon = this.querySelector('i');
-            if (icon) {
-                icon.classList.toggle('fa-bars');
-                icon.classList.toggle('fa-times');
-            }
-        });
-    }
+    // Mobile Menu Toggle - Removed as per requirements
 
-    // Close mobile menu when clicking outside
-    document.addEventListener('click', function(event) {
-        if (nav && nav.classList.contains('active') && 
-            !nav.contains(event.target) && 
-            !mobileMenuBtn.contains(event.target)) {
-            nav.classList.remove('active');
-            const icon = mobileMenuBtn.querySelector('i');
-            if (icon) {
-                icon.classList.remove('fa-times');
-                icon.classList.add('fa-bars');
-            }
-        }
-    });
+    // Close mobile menu when clicking outside - Removed as per requirements
 
     // Smooth scrolling for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
-
-            // Close mobile menu if open
-            if (nav && nav.classList.contains('active')) {
-                nav.classList.remove('active');
-                const icon = mobileMenuBtn.querySelector('i');
-                if (icon) {
-                    icon.classList.remove('fa-times');
-                    icon.classList.add('fa-bars');
-                }
-            }
 
             const targetId = this.getAttribute('href');
             if (targetId === '#') return;
