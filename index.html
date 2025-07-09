@@ -10,7 +10,7 @@
     <link rel="canonical" href="https://jotransportation.com/">
 
     <!-- Security Headers -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.gstatic.com https://cdn.tailwindcss.com https://www.googletagmanager.com 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; connect-src 'self' https://api.emailjs.com https://*.firebaseio.com https://*.googleapis.com https://www.google-analytics.com; frame-src 'none'; object-src 'none'; base-uri 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.gstatic.com https://cdn.tailwindcss.com https://www.googletagmanager.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; connect-src 'self' https://api.emailjs.com https://*.firebaseio.com https://*.googleapis.com https://www.google-analytics.com; frame-src 'none'; object-src 'none'; base-uri 'self';">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
@@ -75,64 +75,46 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer"></noscript>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js" defer></script>
-    <!-- Using pre-built Tailwind CSS instead of CDN to avoid 'eval' usage -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <!-- Custom styles to replace Tailwind configuration -->
-    <style>
-        :root {
-            --color-primary: #B8860B;
-            --color-secondary: #1A1A1A;
-            --color-accent: #B8860B;
-            --color-light: #F5F5F5;
-            --color-dark: #1A1A1A;
-            --color-text: #333333;
-            --color-text-light: #666666;
-            --color-border: #DDDDDD;
-            --color-success: #4CAF50;
-            --color-bg-light: #F9F9F9;
-            --color-bg-dark: #1A1A1A;
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Configure Tailwind only after it's loaded
+        if (typeof tailwind !== 'undefined') {
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            primary: '#B8860B', // Changed to darker gold
+                            secondary: '#1A1A1A',
+                            accent: '#B8860B',
+                            light: '#F5F5F5',
+                            dark: '#1A1A1A',
+                            textColor: '#333333',
+                            textLight: '#666666',
+                            borderColor: '#DDDDDD',
+                            success: '#4CAF50',
+                            bgLight: '#F9F9F9',
+                            bgDark: '#1A1A1A',
+                        },
+                        fontFamily: {
+                            primary: ['Poppins', 'sans-serif'],
+                            secondary: ['Playfair Display', 'serif'],
+                        },
+                        boxShadow: {
+                            'custom': '0 4px 12px rgba(0, 0, 0, 0.1)',
+                            'custom-hover': '0 8px 20px rgba(0, 0, 0, 0.15)',
+                        },
+                        borderRadius: {
+                            'custom': '4px',
+                            'custom-sm': '2px',
+                            'custom-lg': '8px',
+                        },
+                    }
+                }
+            }
+        } else {
+            console.warn('Tailwind CSS not loaded yet');
         }
-
-        /* Custom utility classes to replace Tailwind config */
-        .bg-primary { background-color: var(--color-primary); }
-        .bg-secondary { background-color: var(--color-secondary); }
-        .bg-accent { background-color: var(--color-accent); }
-        .bg-light { background-color: var(--color-light); }
-        .bg-dark { background-color: var(--color-dark); }
-        .bg-bgLight { background-color: var(--color-bg-light); }
-        .bg-bgDark { background-color: var(--color-bg-dark); }
-
-        .text-primary { color: var(--color-primary); }
-        .text-secondary { color: var(--color-secondary); }
-        .text-accent { color: var(--color-accent); }
-        .text-light { color: var(--color-light); }
-        .text-dark { color: var(--color-dark); }
-        .text-textColor { color: var(--color-text); }
-        .text-textLight { color: var(--color-text-light); }
-
-        .border-primary { border-color: var(--color-primary); }
-        .border-secondary { border-color: var(--color-secondary); }
-        .border-borderColor { border-color: var(--color-border); }
-
-        .font-primary { font-family: 'Poppins', sans-serif; }
-        .font-secondary { font-family: 'Playfair Display', serif; }
-
-        .shadow-custom { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
-        .shadow-custom-hover { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); }
-
-        .rounded-custom { border-radius: 4px; }
-        .rounded-custom-sm { border-radius: 2px; }
-        .rounded-custom-lg { border-radius: 8px; }
-
-        /* Hover utilities */
-        .hover\:bg-primary:hover { background-color: var(--color-primary); }
-        .hover\:text-primary:hover { color: var(--color-primary); }
-        .hover\:shadow-custom-hover:hover { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); }
-        .hover\:bg-opacity-90:hover { opacity: 0.9; }
-
-        /* Transition utilities */
-        .transition-all { transition: all 0.3s ease; }
-    </style>
+    </script>
     <link rel="stylesheet" href="css/styles.css">
     <style>
         html {
